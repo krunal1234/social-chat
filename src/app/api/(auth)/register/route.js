@@ -15,27 +15,22 @@ export async function GET(request) {
 
 export async function POST(request) {
     if (request.method === 'POST') {
-      try {
-        const { name, email, phone, address, password, channels } = await request.json();
-        
-        const result = await auth.createUser({
-          name,
-          email,
-          phone,
-          address,
-          password,
-          channels
-        });
-  
-        if (result?.message) {
-          return NextResponse.json(result, { status: 200 });
-        } else {
-          return NextResponse.json({ success: true }, { status: 200 });
+        try {   
+            // Parse the form data
+            const formData = await request.formData();
+            const result = await auth.createUser(formData);
+
+            if (result?.message) {
+                return NextResponse.json(result, { status: 200 });
+            } else {
+                // Handle success, set cookies if necessary
+                // You can use the response to set cookies directly
+                return NextResponse.json({ success: true }, { status: 200 });
+            }
+        } catch (error) {
+            return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
         }
-      } catch (error) {
-        return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
-      }
     } else {
-      return NextResponse.json(`Method ${request.method} Not Allowed`, { status: 405 });
+        return NextResponse.json(`Method ${request.method} Not Allowed`, { status: 405 });
     }
   }

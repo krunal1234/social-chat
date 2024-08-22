@@ -6,23 +6,20 @@ import { useState } from "react";
 import Select from 'react-select'
 
 const channels = [
-  { id : 1, value: 1, label: "Facebook" },
-  { id : 2, value: 2, label: "Instagram" },
-  { id : 3, value: 3, label: "Twitter" },
-  { id : 4, value: 4, label: "LinkedIn" },
-  { id : 5, value: 5, label: "WhatsApp" },
-  { id : 6, value: 6, label: "SMS" },
-  { id : 7, value: 7, label: "Email" }
+  { id: 1,value: 1, label: "Facebook" },
+  { id: 2,value: 2, label: "Instagram" },
+  { id: 3,value: 3, label: "Twitter" },
+  { id: 4,value: 4, label: "LinkedIn" },
+  { id: 5,value: 5, label: "WhatsApp" },
+  { id: 6,value: 6, label: "SMS" },
+  { id: 7,value: 7, label: "Email" }
 ];
 
 async function registerUser(formData) {
   debugger;
   const response = await fetch('/api/register', {
       method: 'POST',
-      body: JSON.stringify({
-        ...formData,
-        channels: selectedChannels
-      }),
+      body: formData,
   });
   
   if (!response.ok) {
@@ -45,7 +42,8 @@ export default function Register() {
         event.preventDefault();
         const formData = new FormData(event.target);
         // Append each selected channel to FormData
-        selectedChannel.forEach(channel => formData.append('channel', channel.value));
+        selectedChannel.forEach(channel => channel.value);
+        formData.append('channels', JSON.stringify(selectedChannel));
 
         try {
           const result = await registerUser(formData);

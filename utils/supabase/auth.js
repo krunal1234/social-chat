@@ -7,56 +7,48 @@ const auth = {
     user: null,
     sessionCookie: null,
 
-    createUser: async ({ name, email, phone, address, password, channels }) => {
+    createUser: async (formData) => {
         try {
-          const supabase = createClient();
-    
-          // Sign up the user
-          const { error: signUpError } = await supabase.auth.signUp({
-            email,
-            password
-          });
-    
-          if (signUpError) {
-            return { message: signUpError.message };
-          }
-    
-          // Retrieve user session data
-          const userData = await auth.getSession();
-    
-          if (userData.message) {
-            return { message: userData.message };
-          }
-    
-          // Create user details in the database
-          const { error: createUserError } = await auth.createUserData({
-            user_id: userData.session.user.id,
-            address,
-            phone,
-            name,
-            channels // Add channels here
-          });
-    
-          if (createUserError) {
-            return { message: createUserError.message };
-          }
-    
-          return { success: true };
+            const supabase = createClient();
+            const data = Object.fromEntries(formData);
+            const { name, phone, email, address, password, channels } = data;
+            
+            // Sign up the user
+            const { error: signUpError } = await supabase.auth.signUp({
+                email,
+                password,
+                // Additional parameters if needed
+            });
+
+            if (signUpError) {
+                return { message: signUpError.message };
+            }
+
+            // Retrieve user session data
+            const userData = await auth.getSession();
+
+            if (userData.message) {
+                return { message: userData.message };
+            }
+
+            // Create user details in the database
+            const { error: createUserError } = await auth.createUserData({
+                user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
+                address,
+                phone,
+                name,
+                channels
+            });
+
+            if (createUserError) {
+                return { message: createUserError.message };
+            }
+
+            return { success: true };
         } catch (error) {
-          return { message: error.message };
+            return { message: error.message };
         }
-      },
-    
-      createUserData: async (data) => {
-        const supabase = createClient();
-        const { error } = await supabase.from("UserInfo").insert(data);
-        
-        if (error) {
-          return { message: error.message };
-        }
-    
-        return { success: true };
-      },
+    },
 
     getSession: async () => {
         const supabase = createClient();
@@ -67,6 +59,17 @@ const auth = {
         }
 
         return data;
+    },
+
+    createUserData: async (data) => {
+        const supabase = createClient();
+        const { error } = await supabase.from("UserInfo").insert(data);
+        
+        if (error) {
+            return { message: error.message };
+        }
+
+        return { success: true };
     },
 
     getUserData: async () => {
