@@ -16,3 +16,20 @@ export async function GET(request) {
         }
     }
 }
+
+export async function PUT(request) {
+    if(request.method == 'PUT'){
+        try {
+            const formData = await request.formData();
+            const data = await auth.updateUserData(formData);
+
+            return NextResponse.json({data}, {
+                status: 200
+            });
+        }catch (error) {
+            return NextResponse.json("Failed to get account:" + error, {
+                status: 403
+            });
+        }
+    }
+}

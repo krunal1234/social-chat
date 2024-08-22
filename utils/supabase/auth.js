@@ -86,6 +86,29 @@ const auth = {
         return data;
     },
 
+    
+    updateUserData: async (formData) => {
+        const supabase = createClient();
+        
+        const userData = await auth.getSession();
+        
+        const updateData = Object.fromEntries(formData);
+        const { name, phone, address, channels } = updateData;
+
+        const { data , error } = await supabase.from("UserInfo").update({ 
+            name: name ,
+            phone: phone ,
+            address: address ,
+            channels : channels,
+        }).eq("user_id",userData.session.user.id);
+
+        if (error) {
+            return { message: error.message };
+        }
+
+        return data;
+    },
+
     createSession: async (formData) => {
         try {
             const supabase = createClient();
