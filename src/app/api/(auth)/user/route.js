@@ -21,8 +21,22 @@ export async function PUT(request) {
     if(request.method == 'PUT'){
         try {
             const formData = await request.formData();
-            const data = await auth.updateUserData(formData);
-
+            const getUserData = await auth.getUserData();
+            let data;
+            if(getUserData.length > 0){
+                data = await auth.updateUserData(formData);
+            }else{
+                const data = Object.fromEntries(formData);
+                const { name, phone, email, address, password, channels } = data;
+                const userData = await auth.getSession();
+                const { error: createUserError } = await auth.createUserData({
+                    user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
+                    address,
+                    phone,
+                    name,
+                    channels
+                });
+            }
             return NextResponse.json({data}, {
                 status: 200
             });
