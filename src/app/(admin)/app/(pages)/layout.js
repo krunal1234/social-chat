@@ -19,14 +19,14 @@ export default function RootLayout({ children }) {
 
   return (
     <div className="h-screen">
-    <div className={`fixed bg-white inset-y-0 left-0 z-20 transition-transform duration-300 shadow-xl ease-in-out ${isSidebarOpen ? 'translate-x-0 opacity-100 visible' : '-translate-x-full opacity-0 invisible'}`}>
-      <Sidebar />
+      <div className={`fixed bg-white inset-y-0 left-0 z-20 transition-transform duration-300 shadow-xl ease-in-out ${isSidebarOpen ? 'translate-x-0 opacity-100 visible' : '-translate-x-full opacity-0 invisible'}`}>
+        <Sidebar />
+      </div>
+      <div className={`${isSidebarOpen ? 'ml-64' : 'ml-0'} transition-all duration-300 flex flex-col h-full`}>
+        <TopBar onSidebarToggle={handleSidebarToggle} />
+        {children}
+        <Footer />
+      </div>
     </div>
-    <div className={`${isSidebarOpen ? 'ml-64' : 'ml-0'} transition-all duration-300 flex flex-col h-full bg-gray-100`}>
-      <TopBar onSidebarToggle={handleSidebarToggle} />
-      {children}
-      <Footer />
-    </div>
-  </div>
   );
 }

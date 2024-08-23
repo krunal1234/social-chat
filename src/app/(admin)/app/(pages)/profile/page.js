@@ -6,11 +6,12 @@ import Select from 'react-select';
 const channels = [
   { id: 1, value: 1, label: "Facebook" },
   { id: 2, value: 2, label: "Instagram" },
-  { id: 3, value: 3, label: "Twitter" },
-  { id: 4, value: 4, label: "LinkedIn" },
-  { id: 5, value: 5, label: "WhatsApp" },
-  { id: 6, value: 6, label: "SMS" },
-  { id: 7, value: 7, label: "Email" }
+  { id: 3, value: 3, label: "WhatsApp" },
+  { id: 4, value: 4, label: "Messenger" },
+  { id: 5, value: 5, label: "Twitter" },
+  { id: 6, value: 6, label: "LinkedIn" },
+  { id: 7, value: 7, label: "SMS" },
+  { id: 8, value: 8, label: "Email" }
 ];
 
 async function profileUpdate(formData) {
