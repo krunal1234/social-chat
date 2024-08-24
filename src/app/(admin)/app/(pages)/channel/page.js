@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import FacebookConnect from "../social-connect/FacebookConnect";
+import { useRouter } from "next/navigation";
 // Import other connect components similarly
 
 const initialCardData = [
@@ -56,6 +57,7 @@ const initialCardData = [
 ];
 
 const Channel = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [cardData, setCardData] = useState(initialCardData);
   const [activeConnectComponent, setActiveConnectComponent] = useState(null);
@@ -90,26 +92,33 @@ const Channel = () => {
   }, []);
 
   const handleConnect = (platform) => {
+    debugger;
     switch (platform) {
       case 'WhatsApp':
-        setActiveConnectComponent(<FacebookConnect />); // Replace with actual WhatsApp component
+        router.push(`/app/social-keys/Whatsapp`, "success");
         break;
       case 'Instagram':
+        router.push(`/app/social-keys/Whatsapp`, "success");
         // setActiveConnectComponent(<InstagramConnect />);
         break;
       case 'Messenger':
+        router.push(`/app/social-keys/Whatsapp`, "success");
         // setActiveConnectComponent(<MessengerConnect />);
         break;
       case 'Twitter':
+        router.push(`/app/social-keys/Twitter`, "success");
         // setActiveConnectComponent(<TwitterConnect />);
         break;
       case 'LinkedIn':
+        router.push(`/app/social-keys/LinkedIn`, "success");
         // setActiveConnectComponent(<LinkedInConnect />);
         break;
       case 'SMS':
+        router.push(`/app/social-keys/Whatsapp`, "success");
         // setActiveConnectComponent(<SMSConnect />);
         break;
       case 'Email':
+        router.push(`/app/social-keys/Whatsapp`, "success");
         // setActiveConnectComponent(<EmailConnect />);
         break;
       default:

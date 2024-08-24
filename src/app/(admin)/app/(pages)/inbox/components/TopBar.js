@@ -82,12 +82,12 @@ const TopBar = ({ activeTab, setActiveTab }) => {
   }
 
   return (
-    <header className="bg-cyan-800 text-white p-4 flex items-center">
+    <header className="text-white p-4 flex items-center">
       <div className="flex space-x-6">
         {activeChannels.map(channel => (
           <button
             key={channel.id}
-            className={`p-2 hover:bg-white hover:fill-white bg-gray-200 rounded ${activeTab === channel.heading.toLowerCase() ? 'bg-white' : ''}`}
+            className={`p-2 hover:bg-white hover:fill-white bg-gray-300 rounded ${activeTab === channel.heading.toLowerCase() ? 'bg-white' : ''}`}
             onClick={() => handleClick(channel.heading.toLowerCase())}
           >
             <img src={channel.icon} className="w-8 h-8" alt={channel.heading} />

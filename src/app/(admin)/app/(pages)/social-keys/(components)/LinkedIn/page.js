@@ -1,7 +1,8 @@
-// components/LinkedInForm.js
+'use client'
+// components/LinkedIn.js
 import { useState } from 'react';
 
-const LinkedInForm = () => {
+const LinkedIn = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -39,6 +40,7 @@ const LinkedInForm = () => {
   };
 
   return (
+    <div className="m-6 space-y-8">
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="message" className="block text-sm font-medium text-gray-700">LinkedIn API</label>
@@ -61,7 +63,8 @@ const LinkedInForm = () => {
       {error && <p className="text-red-500">{error}</p>}
       {success && <p className="text-green-500">Message submitted successfully!</p>}
     </form>
+    </div>
   );
 };
 
-export default LinkedInForm;
+export default LinkedIn;

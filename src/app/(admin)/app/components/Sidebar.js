@@ -1,6 +1,6 @@
 // components/Sidebar.js
 
-import { ArchiveBook, Monitor } from 'iconsax-react';
+import { ArchiveBook, Cloud, DirectInbox, Monitor } from 'iconsax-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';  // Use this hook for path
 
@@ -46,7 +46,7 @@ const Sidebar = () => {
                 isActive('/app/social-keys') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
               }`}
             >
-              <ArchiveBook className="mr-3" size={25} />
+              <Cloud className="mr-3" size={25} />
               <span>API Keys</span>
             </Link>
           </li>
@@ -57,7 +57,7 @@ const Sidebar = () => {
                 isActive('/app/inbox') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
               }`}
             >
-              <ArchiveBook className="mr-3" size={25} />
+              <DirectInbox className="mr-3" size={25} />
               <span>Inbox</span>
             </Link>
           </li>

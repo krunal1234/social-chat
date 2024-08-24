@@ -1,18 +1,15 @@
 'use client'
-import Head from 'next/head';
-import FacebookForm from './components/FacebookForm';
-import TwitterForm from './components/TwitterForm';
-import LinkedInForm from './components/LinkedInForm';
+import Whatsapp from './(components)/Whatsapp/page';
+import Twitter from './(components)/Twitter/page';
+import LinkedIn from './(components)/LinkedIn/page';
 
 export default function Home() {
   return (
     <div className="container mx-auto p-4">
       <main>
-        <div className="mt-6 space-y-8">
-          <FacebookForm />
-          <TwitterForm />
-          <LinkedInForm />
-        </div>
+          <Whatsapp />
+          <Twitter />
+          <LinkedIn />
       </main>
     </div>
   );

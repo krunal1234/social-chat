@@ -65,8 +65,8 @@ export default function Register() {
             <div className="text-6xl mb-12">
               Create Your Account
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-center">
-              <div class="text-left">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-center">
+              <div className="text-left">
                 <div className="mb-5">
                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                     <input type="text" name="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
@@ -80,7 +80,7 @@ export default function Register() {
                     <input type="tel" name="phone" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
                 </div>
               </div>
-              <div class="text-left">
+              <div className="text-left">
                 <div className="mb-5">
                     <label htmlFor="channel" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Active Channel</label>
                     <Select
