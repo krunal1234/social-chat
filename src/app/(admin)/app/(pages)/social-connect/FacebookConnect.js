@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 const FacebookConnect = () => {
+  debugger
   useEffect(() => {
     window.fbAsyncInit = function() {
       FB.init({

@@ -95,10 +95,9 @@ const Channel = () => {
     debugger;
     switch (platform) {
       case 'WhatsApp':
-        router.push(`/app/social-keys/Whatsapp`, "success");
+        setActiveConnectComponent(<FacebookConnect />);
         break;
       case 'Instagram':
-        router.push(`/app/social-keys/Whatsapp`, "success");
         // setActiveConnectComponent(<InstagramConnect />);
         break;
       case 'Messenger':

@@ -7,44 +7,25 @@ const auth = {
     user: null,
     sessionCookie: null,
 
-    createUser: async (formData) => {
+    createSession: async (formData) => {
         try {
             const supabase = createClient();
             const data = Object.fromEntries(formData);
-            const { name, phone, email, address, password, channels } = data;
+            const { email, password } = data;
             
-            // Sign up the user
-            const { error: signUpError } = await supabase.auth.signUp({
+            const { data: sessionData, error } = await supabase.auth.signInWithPassword({
                 email,
-                password,
-                // Additional parameters if needed
+                password
             });
-
-            if (signUpError) {
-                return { message: signUpError.message };
+    
+            if (error) {
+                return { message: error.message };
             }
-
-            // Retrieve user session data
-            const userData = await auth.getSession();
-
-            if (userData.message) {
-                return { message: userData.message };
-            }
-
-            // Create user details in the database
-            const { error: createUserError } = await auth.createUserData({
-                user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
-                address,
-                phone,
-                name,
-                channels
-            });
-
-            if (createUserError) {
-                return { message: createUserError.message };
-            }
-
-            return { success: true };
+    
+            // Store session or token if necessary
+            // For example, you might want to store the session in a cookie or local storage
+    
+            return { success: true, session: sessionData };
         } catch (error) {
             return { message: error.message };
         }
@@ -52,13 +33,13 @@ const auth = {
 
     getSession: async () => {
         const supabase = createClient();
-        const { data, error } = await supabase.auth.getSession();
+        const { data: sessionData, error } = await supabase.auth.getSession();
         
         if (error) {
             return { message: error.message };
         }
-
-        return data;
+    
+        return { session: sessionData.session }; // Ensure you return the session data correctly
     },
 
     createUserData: async (data) => {
@@ -134,18 +115,21 @@ const auth = {
         try {
             const supabase = createClient();
             const { error } = await supabase.auth.signOut();
-
+    
             if (error) {
                 return { message: error.message };
             }
-
+    
+            // Clear session or token if necessary
+            // For example, you might want to clear the session from cookies or local storage
+    
             auth.user = null;
             auth.sessionCookie = null;
             return { success: true };
         } catch (error) {
             return { message: error.message };
         }
-    }
+    },
 };
 
 export default auth;
