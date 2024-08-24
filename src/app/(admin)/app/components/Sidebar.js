@@ -39,6 +39,28 @@ const Sidebar = () => {
               <span>Channel</span>
             </Link>
           </li>
+          <li>
+            <Link
+              href="/app/social-keys"
+              className={`flex p-3 items-center text-xl font-bold hover:text-cyan-500 hover:border-r-4 hover:border-cyan-500 ${
+                isActive('/app/social-keys') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
+              }`}
+            >
+              <ArchiveBook className="mr-3" size={25} />
+              <span>API Keys</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/app/inbox"
+              className={`flex p-3 items-center text-xl font-bold hover:text-cyan-500 hover:border-r-4 hover:border-cyan-500 ${
+                isActive('/app/inbox') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
+              }`}
+            >
+              <ArchiveBook className="mr-3" size={25} />
+              <span>Inbox</span>
+            </Link>
+          </li>
         </ul>
       </nav>
     </aside>

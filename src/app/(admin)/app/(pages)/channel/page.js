@@ -1,112 +1,150 @@
 "use client"
 import { useEffect, useState } from "react";
+import FacebookConnect from "../social-connect/FacebookConnect";
+// Import other connect components similarly
 
-const cardData = [
+const initialCardData = [
   {
-    icon: <img src="/facebook.svg" width={350}/>,
+    icon: <img src="/whatsapp.svg" width={350}/>,
     id: 1,
-    heading: "Facebook",
-    isActive : false,
-    button: <button className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Connect</button>
+    heading: "WhatsApp",
+    isActive: false,
+    handler: 'WhatsApp'
   },
   {
     icon: <img src="/instagram.svg" width={350}/>,
     id: 2,
     heading: "Instagram",
-    isActive : false,
-    button: <button className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Connect</button>
-  },
-  {
-    icon: <img src="/whatsapp.svg" width={350}/>,
-    id: 3,
-    heading: "WhatsApp",
-    isActive : false,
-    button: <button className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Connect</button>
+    isActive: false,
+    handler: 'Instagram'
   },
   {
     icon: <img src="/facebook-messenger.svg" width={350}/>,
-    id: 4,
+    id: 3,
     heading: "Messenger",
-    isActive : false,
-    button: <button className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Connect</button>
+    isActive: false,
+    handler: 'Messenger'
   },
   {
-    icon: <img src="/instagram.svg" width={350}/>,
-    id: 5,
+    icon: <img src="/twitter.svg" width={350}/>,
+    id: 4,
     heading: "Twitter",
-    isActive : false,
-    button: <button className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Connect</button>
+    isActive: false,
+    handler: 'Twitter'
   },
   {
-    icon: <img src="/instagram.svg" width={350}/>,
+    icon: <img src="/linkedin.svg" width={350}/>,
     id: 5,
     heading: "LinkedIn",
-    isActive : false,
-    button: <button className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Connect</button>
+    isActive: false,
+    handler: 'LinkedIn'
   },
   {
-    icon: <img src="/instagram.svg" width={350}/>,
+    icon: <img src="/sms.svg" width={350}/>,
     id: 6,
     heading: "SMS",
-    isActive : false,
-    button: <button className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Connect</button>
+    isActive: false,
+    handler: 'SMS'
   },
   {
-    icon: <img src="/instagram.svg" width={350}/>,
+    icon: <img src="/email.svg" width={350}/>,
     id: 7,
     heading: "Email",
-    isActive : false,
-    button: <button className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Connect</button>
+    isActive: false,
+    handler: 'Email'
   },
 ];
 
 const Channel = () => {
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
+  const [cardData, setCardData] = useState(initialCardData);
+  const [activeConnectComponent, setActiveConnectComponent] = useState(null);
 
   useEffect(() => {
-    debugger;
     const getUser = async () => {
       try {
         const response = await fetch('/api/user', {
           method: 'GET'
         });
         const data = await response.json();
-        setProfileData(data.data[0]);
-        setLoading(false);
-
-        // Set the selected channels based on profileData
         const userChannels = JSON.parse(data.data[0].channels || '[]');
-        setSelectedChannel(userChannels);
+        
+        // Map user channels to ids for easier lookup
+        const activeChannelIds = new Set(userChannels.map(channel => channel.id));
+
+        // Update cardData with isActive based on API response
+        const updatedCardData = initialCardData.map(card => ({
+          ...card,
+          isActive: activeChannelIds.has(card.id),
+        }));
+        
+        setCardData(updatedCardData);
+        setLoading(false);
       } catch (error) {
         console.error('Failed to check session', error);
         setLoading(false);
       }
     };
+    
     getUser();
-    setLoading(false);
   }, []);
 
+  const handleConnect = (platform) => {
+    switch (platform) {
+      case 'WhatsApp':
+        setActiveConnectComponent(<FacebookConnect />); // Replace with actual WhatsApp component
+        break;
+      case 'Instagram':
+        // setActiveConnectComponent(<InstagramConnect />);
+        break;
+      case 'Messenger':
+        // setActiveConnectComponent(<MessengerConnect />);
+        break;
+      case 'Twitter':
+        // setActiveConnectComponent(<TwitterConnect />);
+        break;
+      case 'LinkedIn':
+        // setActiveConnectComponent(<LinkedInConnect />);
+        break;
+      case 'SMS':
+        // setActiveConnectComponent(<SMSConnect />);
+        break;
+      case 'Email':
+        // setActiveConnectComponent(<EmailConnect />);
+        break;
+      default:
+        setActiveConnectComponent(null);
+    }
+  };
+
   if (loading) {
-    return <main className="p-6 h-full flex-wrap flex items-center justify-center"><p>Loading...</p></main>; // Optionally, show a loading indicator
+    return <main className="p-6 h-full flex-wrap flex items-center justify-center"><p>Loading...</p></main>;
   }
 
   return (
-    <main className="p-6 flex-wrap bg-gray-100">
+    <main className="p-6 flex-wrap">
       <h2 className="text-2xl font-bold">Channel</h2>
       <div className="mt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {cardData.map((card, index) => (
+          {cardData.filter(card => card.isActive).map((card, index) => (
             <div key={index} className="bg-white shadow-md rounded-lg overflow-hidden">
               <div className="text-center p-4">
-                {/* Icon Column */}
-                  {card.icon}
-                  <h2 className="text-xl mt-4 font-semibold">{card.heading}</h2>
-                  <div>{card.button}</div>
+                {card.icon}
+                <h2 className="text-xl mt-4 font-semibold">{card.heading}</h2>
+                <div>
+                  <button
+                    className="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    onClick={() => handleConnect(card.handler)}
+                  >
+                    Connect
+                  </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+      {activeConnectComponent}
     </main>
   );
 };

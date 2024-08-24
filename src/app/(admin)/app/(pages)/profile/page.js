@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import Select from 'react-select';
 
+
 const channels = [
-  { id: 1, value: 1, label: "Facebook" },
+  { id: 1, value: 1, label: "WhatsApp" },
   { id: 2, value: 2, label: "Instagram" },
-  { id: 3, value: 3, label: "WhatsApp" },
-  { id: 4, value: 4, label: "Messenger" },
-  { id: 5, value: 5, label: "Twitter" },
-  { id: 6, value: 6, label: "LinkedIn" },
-  { id: 7, value: 7, label: "SMS" },
-  { id: 8, value: 8, label: "Email" }
+  { id: 3, value: 3, label: "Messenger" },
+  { id: 4, value: 4, label: "Twitter" },
+  { id: 5, value: 5, label: "LinkedIn" },
+  { id: 6, value: 6, label: "SMS" },
+  { id: 7, value: 7, label: "Email" }
 ];
 
 async function profileUpdate(formData) {
