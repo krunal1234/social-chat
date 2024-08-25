@@ -1,6 +1,7 @@
 import React from 'react';
 
 const ChatWindow = ({ activeTab }) => {
+
   return (
     <main className="flex-1 bg-white p-4 overflow-y-auto">
       <div className="flex flex-col h-full">
