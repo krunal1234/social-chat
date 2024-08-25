@@ -6,12 +6,17 @@ import ChatWindow from './components/ChatWindow';
 import Drawer from './components/Drawer';
 
 const Page = () => {
-  const [activeTab, setActiveTab] = useState('facebook');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeChat, setActiveChat] = useState(null);
+  const [activeTab, setActiveTab] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
+
+  const handleSelectChat = (mobileNumber) => {
+    setActiveChat(mobileNumber);
+  };
 
   return (
     <div className="flex flex-col h-screen">
@@ -22,8 +27,8 @@ const Page = () => {
         toggleDrawer={toggleDrawer}
       />
       <div className="flex flex-1 overflow-hidden relative">
-        <Sidebar isOpen={!isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <ChatWindow activeTab={activeTab} toggleSidebar={toggleSidebar} toggleDrawer={toggleDrawer}/>
+        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} onSelectChat={handleSelectChat} />
+        <ChatWindow activeChat={activeChat} toggleSidebar={toggleSidebar} toggleDrawer={toggleDrawer} />
         <Drawer isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
       </div>
     </div>

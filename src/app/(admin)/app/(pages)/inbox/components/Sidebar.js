@@ -1,17 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
+  const [loading, setLoading] = useState(true);
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    const getMessageList = async () => {
+      try {
+        const response = await fetch('/api/messageList/whatsapp', {
+          method: 'GET'
+        });
+        const data = await response.json();
+
+        // Group chats by MobileNumber
+        const groupedChats = data.data.reduce((acc, chat) => {
+          if (!acc[chat.MobileNumber]) {
+            acc[chat.MobileNumber] = [];
+          }
+          acc[chat.MobileNumber].push(chat);
+          return acc;
+        }, {});
+
+        // Convert groupedChats to an array of objects
+        const formattedChats = Object.keys(groupedChats).map(mobileNumber => ({
+          mobileNumber,
+          chats: groupedChats[mobileNumber]
+        }));
+
+        setChats(formattedChats);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch message list', error);
+        setLoading(false);
+      }
+    };
+    getMessageList();
+  }, []);
+
   return (
-    <aside className={`${ isOpen ? '' : 'hidden' } absolute lg:relative lg:top-0 top-16 left-0 h-full bg-white border-r border-gray-300 p-4 overflow-y-auto transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-80 lg:relative lg:w-1/4`}>
+    <aside className={`${isOpen ? '' : 'hidden'} absolute lg:relative lg:top-0 top-16 left-0 h-full bg-white border-r border-gray-300 p-4 overflow-y-auto transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-80 lg:relative lg:w-1/4`}>
       <button onClick={toggleSidebar} className="lg:hidden absolute top-4 right-4">
         <span className="sr-only">Close Sidebar</span>
       </button>
       <h2 className="text-xl font-semibold mb-4">Chats</h2>
       <ul>
-        <li className="p-2 border-b border-gray-200 hover:bg-gray-100 cursor-pointer">
-          <span className="font-semibold">John Doe</span>
-          <p className="text-sm text-gray-600">Hello, how are you?</p>
-        </li>
+        {loading ? (
+          <li>Loading...</li>
+        ) : (
+          chats.map(({ mobileNumber, chats }) => (
+            <li 
+              key={mobileNumber} 
+              className="p-2 border-b border-gray-200 hover:bg-gray-100 cursor-pointer" 
+              onClick={() => onSelectChat(mobileNumber)}
+            >
+              <span className="font-semibold">{mobileNumber}</span>
+              <p className="text-sm text-gray-600">
+                {chats[chats.length - 1]?.generatedmessages || 'No messages'}
+              </p>
+            </li>
+          ))
+        )}
       </ul>
     </aside>
   );

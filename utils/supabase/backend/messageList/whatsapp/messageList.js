@@ -1,3 +1,4 @@
+import auth from "../../../auth";
 import { createClient } from "../../../server";
 
 const WhatsappMessageList = {
@@ -19,13 +20,14 @@ const WhatsappMessageList = {
 
         const { data , error } = await supabase.from("WhatsappMessageList")
         .select("*")
-        .eq("platform_id","1")
-        .eq("wamessageid","")
         .eq("user_id",userData.session.user.id);
 
+        
         if (error) {
             return { message: error.message };
         }
+
+        return data;
     },
 };
 

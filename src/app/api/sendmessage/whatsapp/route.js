@@ -66,7 +66,8 @@ export async function POST(request) {
                         ChatFrom: FromNumber,
                         status: "sent",
                         MobileNumber: MobileNumber,
-                        Fullname: data.messages[0].FullName ? data.messages[0].FullName : data.messages[0].FromNumber
+                        Fullname: data.messages[0].FullName ? data.messages[0].FullName : data.messages[0].FromNumber,
+                        SentFromWhatsapp: false,
                     });
         
                     return NextResponse.json(result, {
