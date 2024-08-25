@@ -11,13 +11,9 @@ export async function GET(request) {
       let token = url.searchParams.get("hub.verify_token");
 
       if (mode === "subscribe" && token === my_token) {
-        return NextResponse.json(challenge, {
-          status: 200
-        });
+        return new NextResponse(challenge, { status: 200, headers: { 'Content-Type': 'text/plain' } });
       } else {
-        return NextResponse.json({ success: false }, {
-          status: 403 // Forbidden
-        });
+        return NextResponse.json({ success: false }, { status: 403 });
       }
     } catch (error) {
       console.error("Error handling GET request:", error);
