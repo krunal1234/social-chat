@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import WhatsappMessageList from "../../../../../utils/supabase/backend/messageList/whatsapp/messageList";
 
 export async function POST(request) {
     if (request.method === 'POST') {
@@ -7,7 +8,7 @@ export async function POST(request) {
             const { ChatFrom, Fullname, MobileNumber , messageList} = data;
             const userData = await auth.getSession();
 
-            const result = await whatsappCredentials.create({
+            const result = await WhatsappMessageList.create({
                 user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
                 wamessageid : messageList[0].wamessageid,
                 generatedmessages : messageList[0].generatedmessages, 

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { FB } from "fb/lib/fb";
 import whatsappCredentials from "../../../../../utils/supabase/backend/whatsappCredentials/whatsappCrendentials";
+import WhatsappMessageList from "../../../../../utils/supabase/backend/messageList/whatsapp/messageList";
+import auth from "../../../../../utils/supabase/auth";
 
 export async function GET(request) {
     if (request.method === 'GET') {
@@ -19,7 +21,8 @@ export async function POST(request) {
         let TotalSent = 0;
         let TotalFail = 0;
         const data = await request.json(); // Parse JSON payload
-        const { platform, FromNumber, MobileNumber, generatedmessages, platform_id } = data;
+        const { FromNumber, MobileNumber, generatedmessages } = data;
+        const userData = await auth.getSession();
 
         const whatsappCredentialsData = await whatsappCredentials.get();
 
@@ -35,26 +38,40 @@ export async function POST(request) {
                     resolve(true);
                 }
                 if (data.messages && data.messages.length > 0) {
-                    let sendData = {
-                    accountId : whatsappCredentialsData[0].user_id,
-                    FromNumber : fromnumber,
-                    Fullname: FromNumber,
-                    MobileNumber: MobileNumber,
-                    Email: "",
-                    messageList : [{
+                    // let sendData = {
+                    // accountId : whatsappCredentialsData[0].user_id,
+                    // FromNumber : FromNumber,
+                    // Fullname: FromNumber,
+                    // MobileNumber: MobileNumber,
+                    // Email: "",
+                    // messageList : [{
+                    //     wamessageid : data.messages[0].id,
+                    //     CampaignTemplateId :'',
+                    //     generatedmessages: generatedmessages,
+                    //     FileUploaded : UploadedFile,
+                    //     BtnURL : BTNUrl,
+                    //     FileType: FileType,
+                    //     ChatFrom: '0',
+                    //     status : data.messages[0].message_status,
+                    //     templateType : whatsappCredentialsData[0].templateType,
+                    //     BtnPayload : BTNPayload,
+                    //     BtnPhone : BTNPhone,
+                    // }]
+                    // } 
+                    
+                    const result = await WhatsappMessageList.create({
+                        user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
                         wamessageid : data.messages[0].id,
-                        CampaignTemplateId :'',
-                        generatedmessages: generatedmessages,
-                        FileUploaded : UploadedFile,
-                        BtnURL : BTNUrl,
-                        FileType: FileType,
-                        ChatFrom: '0',
-                        status : data.messages[0].message_status,
-                        templateType : whatsappCredentialsData[0].templateType,
-                        BtnPayload : BTNPayload,
-                        BtnPhone : BTNPhone,
-                    }]
-                    } 
+                        generatedmessages,
+                        ChatFrom: FromNumber,
+                        status: "sent",
+                        MobileNumber: MobileNumber,
+                        Fullname: data.messages[0].FullName ? data.messages[0].FullName : data.messages[0].FromNumber
+                    });
+        
+                    return NextResponse.json(result, {
+                        status: 200
+                    });
                 }
                 });
             });

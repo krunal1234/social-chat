@@ -1,3 +1,5 @@
+import { createClient } from "../../../server";
+
 const WhatsappMessageList = {
     create : async (data) => {
         const supabase = createClient();

@@ -62,7 +62,7 @@ const ChatForm = ({ onNewMessage }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+debugger;
     if (formData.generatedmessages.trim()) {
       const newMessage = { text: formData.generatedmessages, sender: 'user' };
       onNewMessage(newMessage);
