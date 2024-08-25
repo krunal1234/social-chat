@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 export async function GET(request) {
   if (request.method === 'GET') {
     try {
@@ -7,12 +9,18 @@ export async function GET(request) {
 
       const my_token = "webhook_social_chat";
       if (mode === "subscribe" && token === my_token) {
-        res.send(challange);
+        return NextResponse.json(challange, {
+          status: 200
+        });
       } else {
-        res.send("something went wrong");
+        return NextResponse.json({success : false}, {
+          status: 200
+        });
       }
     } catch (error) {
-      res.send(error);
+      return NextResponse.json(error, {
+        status: 200
+      });
     }
   }
 };
@@ -112,7 +120,9 @@ export async function POST(request) {
               body : JSON.stringify(sendData)
           })
           .then(function (response) {
-          res.sendStatus(200);
+            return NextResponse.json({success : true}, {
+              status: 200
+            });
           })
           .catch(function (error) {
           console.log("something went wrong", error);
@@ -134,7 +144,9 @@ export async function POST(request) {
               body : JSON.stringify(sendData)
           })
           .then(function (response) {
-              res.sendStatus(200);
+            return NextResponse.json({success : true}, {
+              status: 200
+            });
           })
           .catch(function (error) {
           console.log("something went wrong", error);
@@ -142,7 +154,9 @@ export async function POST(request) {
         }
       }
     } catch (error) {
-      res.send(error);
+      return NextResponse.json(error, {
+        status: 200
+      });
     }
   }
 }
