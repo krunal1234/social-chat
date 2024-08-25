@@ -6,15 +6,25 @@ import ChatWindow from './components/ChatWindow';
 import Drawer from './components/Drawer';
 
 const Page = () => {
-  const [activeTab, setActiveTab] = useState('facebook'); // Default to 'facebook'
+  const [activeTab, setActiveTab] = useState('facebook');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
   return (
     <div className="flex flex-col h-screen">
-      <TopBar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        <ChatWindow activeTab={activeTab} />
-        <Drawer />
+      <TopBar
+        activeTab={!activeTab}
+        setActiveTab={setActiveTab}
+        toggleSidebar={toggleSidebar}
+        toggleDrawer={toggleDrawer}
+      />
+      <div className="flex flex-1 overflow-hidden relative">
+        <Sidebar isOpen={!isSidebarOpen} toggleSidebar={toggleSidebar} />
+        <ChatWindow activeTab={activeTab} toggleSidebar={toggleSidebar} toggleDrawer={toggleDrawer}/>
+        <Drawer isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
       </div>
     </div>
   );
