@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const my_token = "webhook_social_chat";
+const my_token = "webhook";
 
 export async function GET(request) {
   if (request.method === 'GET') {
