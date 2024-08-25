@@ -1,25 +1,28 @@
 import { NextResponse } from "next/server";
 
+const my_token = "webhook_social_chat";
+
 export async function GET(request) {
   if (request.method === 'GET') {
     try {
-      let mode = request.query["hub.mode"];
-      let challange = request.query["hub.challenge"];
-      let token = request.query["hub.verify_token"];
+      const url = new URL(request.url);
+      let mode = url.searchParams.get("hub.mode");
+      let challenge = url.searchParams.get("hub.challenge");
+      let token = url.searchParams.get("hub.verify_token");
 
-      const my_token = "webhook_social_chat";
       if (mode === "subscribe" && token === my_token) {
-        return NextResponse.json(challange, {
+        return NextResponse.json(challenge, {
           status: 200
         });
       } else {
-        return NextResponse.json({success : false}, {
-          status: 200
+        return NextResponse.json({ success: false }, {
+          status: 403 // Forbidden
         });
       }
     } catch (error) {
-      return NextResponse.json(error, {
-        status: 200
+      console.error("Error handling GET request:", error);
+      return NextResponse.json({ error: "Internal Server Error" }, {
+        status: 500
       });
     }
   }
@@ -27,136 +30,92 @@ export async function GET(request) {
 
 export async function POST(request) {
   if (request.method === 'POST') {
-    const data = await request.json();
     try {
-      if (data.entry &&
-          data.entry[0].changes &&
-          data.entry[0].changes[0].value &&
-          data.entry[0].changes[0].value.metadata) {
-        
+      const data = await request.json();
+
+      if (data.entry && data.entry[0].changes && data.entry[0].changes[0].value) {
+        const value = data.entry[0].changes[0].value;
+        const metadata = value.metadata;
+        const contacts = value.contacts && value.contacts[0];
+        const messages = value.messages;
+        const statuses = value.statuses;
+
         let sendData;
-        const { data: messages, error: insertError } = await supabase
-          .from('messages')
-          .insert([{ 
-            isSent: true, 
-            timestamp: new Date().toISOString()
-          }]);
 
-        if (insertError) {
-          throw insertError;
-        }
-
-        if (data.entry[0].changes[0].value.messages) {
-          const messageType = data.entry[0].changes[0].value.messages[0].type;
-          const messageValue = data.entry[0].changes[0].value.messages[0];
+        if (messages) {
+          const message = messages[0];
+          const messageType = message.type;
+          let messageValue;
 
           if (messageType === 'text') {
-            sendData = {
-              ChatFrom: data.entry[0].changes[0].value.metadata.display_phone_number,
-              Fullname: data.entry[0].changes[0].value.contacts[0].profile.name,
-              MobileNumber: data.entry[0].changes[0].value.contacts[0].wa_id,
-              Email: "",
-              messageList: [{
-                wamessageid: messageValue.id,
-                CampaignTemplateId: '',
-                generatedmessages: messageValue.text.body,
-                FileUploaded: "",
-                FileType: "",
-                BtnURL: "",
-                ChatFrom: '1',
-                status: "sent",
-                templateType: "",
-                BtnPayload: false,
-                BtnPhone: "",
-                timestamp: new Date().toISOString(),
-              }]
-            };
+            messageValue = message.text.body;
           } else if (messageType === 'button') {
-            sendData = {
-              ChatFrom: data.entry[0].changes[0].value.metadata.display_phone_number,
-              Fullname: data.entry[0].changes[0].value.contacts[0].profile.name,
-              MobileNumber: data.entry[0].changes[0].value.contacts[0].wa_id,
-              Email: "",
-              messageList: [{
-                wamessageid: messageValue.id,
-                CampaignTemplateId: '',
-                generatedmessages: messageValue.button.payload,
-                FileUploaded: "",
-                FileType: "",
-                BtnURL: "",
-                ChatFrom: '1',
-                status: "sent",
-                templateType: "",
-                BtnPayload: false,
-                BtnPhone: "",
-                timestamp: new Date().toISOString(),
-              }]
-            };
-          } else {
-            sendData = {
-              ChatFrom: data.entry[0].changes[0].value.metadata.display_phone_number,
-              Fullname: data.entry[0].changes[0].value.contacts[0].profile.name,
-              MobileNumber: data.entry[0].changes[0].value.contacts[0].wa_id,
-              Email: "",
-              messageList: [{
-                wamessageid: messageValue.id,
-                CampaignTemplateId: '',
-                generatedmessages: messageValue.image.caption,
-                FileUploaded: messageValue.image.id,
-                FileType: "",
-                BtnURL: "",
-                ChatFrom: '1',
-                status: "sent",
-                templateType: "",
-                BtnPayload: false,
-                BtnPhone: "",
-                timestamp: new Date().toISOString(),
-              }]
-            };
+            messageValue = message.button.payload;
+          } else if (messageType === 'image') {
+            messageValue = message.image.caption;
           }
-          
-          await fetch('/api/messageList',{
-              method : "POST",
-              body : JSON.stringify(sendData)
-          })
-          .then(function (response) {
-            return NextResponse.json({success : true}, {
-              status: 200
-            });
-          })
-          .catch(function (error) {
-          console.log("something went wrong", error);
-          });
-        }
-        
-        if (data.entry[0].changes[0].value.statuses) {
-          const statusValue = data.entry[0].changes[0].value.statuses[0];
 
           sendData = {
-            ChatFrom: data.entry[0].changes[0].value.metadata.display_phone_number,
-            MobileNumber: statusValue.recipient_id,
-            wamessageid: statusValue.id,
-            status: statusValue.status,
+            ChatFrom: metadata.display_phone_number,
+            Fullname: contacts ? contacts.profile.name : '',
+            MobileNumber: contacts ? contacts.wa_id : '',
+            Email: "",
+            messageList: [{
+              wamessageid: message.id,
+              CampaignTemplateId: '',
+              generatedmessages: messageValue || '',
+              FileUploaded: messageType === 'image' ? message.image.id : '',
+              FileType: messageType || "",
+              BtnURL: "",
+              ChatFrom: '1',
+              status: "sent",
+              templateType: "",
+              BtnPayload: messageType === 'button' ? true : false,
+              BtnPhone: "",
+              timestamp: new Date().toISOString(),
+            }]
           };
 
-          await fetch('/api/messageList',{
-              method : "UPDATE",
-              body : JSON.stringify(sendData)
-          })
-          .then(function (response) {
-            return NextResponse.json({success : true}, {
-              status: 200
-            });
-          })
-          .catch(function (error) {
-          console.log("something went wrong", error);
+          await fetch('/api/messageList', {
+            method: "POST",
+            body: JSON.stringify(sendData),
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          return NextResponse.json({ success: true }, {
+            status: 200
+          });
+        }
+
+        if (statuses) {
+          const status = statuses[0];
+          sendData = {
+            ChatFrom: metadata.display_phone_number,
+            MobileNumber: status.recipient_id,
+            wamessageid: status.id,
+            status: status.status,
+          };
+
+          await fetch('/api/messageList', {
+            method: "PUT", // Use PUT or PATCH if updating
+            body: JSON.stringify(sendData),
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          return NextResponse.json({ success: true }, {
+            status: 200
           });
         }
       }
     } catch (error) {
-      return NextResponse.json(error, {
-        status: 200
+      console.error("Error handling POST request:", error);
+      return NextResponse.json({ error: "Internal Server Error" }, {
+        status: 500
       });
     }
+  } else {
+    return NextResponse.json({ error: "Method Not Allowed" }, {
+      status: 405
+    });
   }
 }
