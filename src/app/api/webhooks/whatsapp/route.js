@@ -72,7 +72,7 @@ export async function POST(request) {
             }]
           };
 
-          await fetch('/api/messageList', {
+          await fetch('https://social-chat-mu.vercel.app/api/messageList', {
             method: "POST",
             body: JSON.stringify(sendData),
             headers: { 'Content-Type': 'application/json' }
@@ -92,7 +92,7 @@ export async function POST(request) {
             status: status.status,
           };
 
-          await fetch('/api/messageList', {
+          await fetch('https://social-chat-mu.vercel.app/api/messageList', {
             method: "PUT", // Use PUT or PATCH if updating
             body: JSON.stringify(sendData),
             headers: { 'Content-Type': 'application/json' }
