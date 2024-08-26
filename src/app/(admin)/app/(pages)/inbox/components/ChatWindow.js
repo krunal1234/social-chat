@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SidebarRight, TextalignJustifyleft } from 'iconsax-react';
 import ChatForm from './ChatForm';
 import { createClient } from '../../../../../../../utils/supabase/client';
@@ -58,14 +58,14 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
     };
   }, [activeChat]);
 
+  const handleNewMessage = (newMessage) => {
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
+
   useEffect(() => {
     // Scroll to the bottom of the messages container
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-
-  const handleNewMessage = (newMessage) => {
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-  };
 
   return (
     <main className="flex-1 bg-white p-4 flex flex-col">
@@ -78,7 +78,7 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
         <SidebarRight size="32" onClick={toggleDrawer} />
       </div>
 
-      <div className="flex-1 overflow-auto scrollable-container mb-4">
+      <div className="flex-1 overflow-y-auto mb-4">
         <div className="space-y-4">
           {messages.length === 0 ? (
             <p>No messages</p>
