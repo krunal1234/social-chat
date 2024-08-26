@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { createClient } from '../../../../../../../utils/supabase/client';
 
 const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
   const [loading, setLoading] = useState(true);
   const [chats, setChats] = useState([]);
+  const supabase = createClient();
 
   useEffect(() => {
     const getMessageList = async () => {
@@ -33,7 +35,44 @@ const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
       }
     };
     getMessageList();
+
+    // Create a new channel for real-time subscriptions
+    const channel = supabase
+      .channel('public:WhatsappMessageList')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'WhatsappMessageList' }, payload => {
+        handleNewMessage(payload.new);
+      })
+      .subscribe();
+
+    // Cleanup subscription on component unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
+
+  const handleNewMessage = (newMessage) => {
+    setChats(prevChats => {
+      const mobileNumber = newMessage.MobileNumber;
+      const updatedChats = prevChats.map(chatGroup => {
+        if (chatGroup.mobileNumber === mobileNumber) {
+          return {
+            ...chatGroup,
+            chats: [...chatGroup.chats, newMessage]
+          };
+        }
+        return chatGroup;
+      });
+
+      if (!updatedChats.some(chatGroup => chatGroup.mobileNumber === mobileNumber)) {
+        updatedChats.push({
+          mobileNumber,
+          chats: [newMessage]
+        });
+      }
+
+      return updatedChats;
+    });
+  };
 
   return (
     <aside className={`${isOpen ? '' : 'hidden'} absolute lg:relative lg:top-0 top-34 left-0 h-full bg-white border-r border-gray-300 p-4 overflow-y-auto transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-80 lg:w-1/4`}>
