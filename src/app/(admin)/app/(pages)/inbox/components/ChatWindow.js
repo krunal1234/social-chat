@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SidebarRight, TextalignJustifyleft } from 'iconsax-react';
 import ChatForm from './ChatForm';
+import { createClient } from '../../../../../../../utils/supabase/client';
 
 const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
   const [messages, setMessages] = useState([]);
@@ -36,6 +37,21 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
     };
 
     fetchMessages();
+
+    const supabase = createClient();
+
+    // Create a new channel for real-time subscriptions
+    const channel = supabase
+      .channel('public:WhatsappMessageList')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'WhatsappMessageList' }, payload => {
+        handleNewMessage(payload.new);
+      })
+      .subscribe();
+
+    // Cleanup subscription on component unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [activeChat]);
 
   const handleNewMessage = (newMessage) => {
@@ -46,7 +62,7 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
     <main className="flex-1 bg-white p-4 flex flex-col">
       <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-4">
         <TextalignJustifyleft className="lg:hidden" onClick={toggleSidebar} />
-        <h1 className="text-xl font-semibold">Chat with {activeChat}</h1>
+        <h1 className="text-xl font-semibold">{activeChat}</h1>
         <SidebarRight size="32" onClick={toggleDrawer} />
       </div>
 

@@ -20,8 +20,8 @@ const ChatForm = ({ onNewMessage, FromNumber, MobileNumber }) => {
     e.preventDefault();
 
     if (formData.generatedmessages.trim()) {
-      const newMessage = { id: Date.now(), generatedmessages: formData.generatedmessages, SentFromWhatsapp: false };
-      onNewMessage(newMessage);
+      // const newMessage = { id: Date.now(), generatedmessages: formData.generatedmessages, SentFromWhatsapp: false };
+      // onNewMessage(newMessage);
 
       try {
         const response = await fetch('/api/sendmessage/whatsapp', {

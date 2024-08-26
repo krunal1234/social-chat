@@ -1,4 +1,3 @@
-import auth from "../../../auth";
 import { createClient } from "../../../server";
 
 const WhatsappMessageList = {
@@ -44,6 +43,22 @@ const WhatsappMessageList = {
             return { message: error.message };
         }
     },
+    startListening: async () => {
+        const supabase = createClient();
+
+        const { subscription, error} = supabase
+            .from('WhatsappMessageList')
+            .on('INSERT', payload => {
+                handleRealTimeUpdates(payload);
+            })
+            .subscribe();
+
+        if (error) {
+            return { message: error.message };
+        }
+
+        return subscription;
+    }    
 };
 
 export default WhatsappMessageList;
