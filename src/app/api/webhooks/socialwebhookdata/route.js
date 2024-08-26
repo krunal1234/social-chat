@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import WebhookData from "../../../../../utils/supabase/backend/(WebhookData)/webhookData";
+import WebhookData from "../../../../../utils/supabase/backend/Webhook/WebhookData";
 
 export async function POST(request) {
     if (request.method === 'POST') {
