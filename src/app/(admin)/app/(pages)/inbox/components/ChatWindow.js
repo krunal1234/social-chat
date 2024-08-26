@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { SidebarRight, TextalignJustifyleft } from 'iconsax-react';
 import ChatForm from './ChatForm';
 import { createClient } from '../../../../../../../utils/supabase/client';
-import './ChatWindow.css'; // Import your CSS file
 
 const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
   const [messages, setMessages] = useState([]);
