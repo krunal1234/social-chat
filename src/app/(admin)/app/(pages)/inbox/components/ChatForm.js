@@ -69,14 +69,16 @@ const ChatForm = ({ onNewMessage, FromNumber, MobileNumber , Fullname}) => {
             </div>
             <div className="mr-2 flex items-center">
               <Image 
-                src={"https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f603.png"}
+                src="/smile.svg"
                 onClick={toggleVisibility} 
                 alt="smile" 
+                width={8}
+                height={8}
                 className="w-8 h-8 cursor-pointer" 
               />
               {!isHidden && (
                 <Picker 
-                  style={{ position: "absolute", bottom: 14, left: 2, zIndex: 999 }} 
+                  style={{ position: "absolute", bottom: 60, left: 2, zIndex: 999 }} 
                   autoFocus={false} 
                   onEmojiClick={onEmojiClick} 
                 />
