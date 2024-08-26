@@ -72,7 +72,7 @@ export async function POST(request) {
             }]
           };
 
-          await fetch('https://social-chat-mu.vercel.app/api/messageList', {
+          await fetch('https://social-chat-mu.vercel.app/api/messageList/whatsapp', {
             method: "POST",
             body: JSON.stringify(sendData),
             headers: { 'Content-Type': 'application/json' }

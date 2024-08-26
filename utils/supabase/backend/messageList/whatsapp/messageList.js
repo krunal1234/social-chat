@@ -32,8 +32,6 @@ const WhatsappMessageList = {
     getChat: async (MobileNumber, ChatFrom) => {
         const supabase = createClient();
         
-        const userData = await auth.getSession();
-
         const { data , error } = await supabase.from("WhatsappMessageList")
         .select("user_id")
         .eq("ChatFrom",ChatFrom)
