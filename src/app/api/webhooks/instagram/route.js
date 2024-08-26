@@ -29,7 +29,7 @@ export async function POST(request) {
         try {
             const data = await request.json();
 
-            return NextResponse.json({ data }, { status: 200 });
+            return NextResponse.json({data});
 
             if (data.entry && data.entry[0].changes && data.entry[0].changes[0].value) {
                 const value = data.entry[0].changes[0].value;
