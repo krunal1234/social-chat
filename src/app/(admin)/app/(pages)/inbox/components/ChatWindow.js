@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SidebarRight, TextalignJustifyleft } from 'iconsax-react';
 import ChatForm from './ChatForm';
 import { createClient } from '../../../../../../../utils/supabase/client';
