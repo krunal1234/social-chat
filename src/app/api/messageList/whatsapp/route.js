@@ -29,9 +29,9 @@ export async function POST(request) {
                 user_id: existingInbox[0].user_id, // Assuming `user_id` is the primary key or identifier in your table
                 wamessageid : messageList[0].wamessageid,
                 generatedmessages : messageList[0].generatedmessages, 
-                ChatFrom, 
-                MobileNumber,
-                Fullname,
+                ChatFrom : ChatFrom, 
+                MobileNumber: MobileNumber,
+                Fullname : Fullname ? Fullname : MobileNumber,
                 status : messageList[0].status, 
                 SentFromWhatsapp: true,
             });
