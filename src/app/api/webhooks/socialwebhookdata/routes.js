@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import WebhookData from "../../../../../utils/supabase/backend/(WebhookData)/webhookData";
 
 export async function POST(request) {
