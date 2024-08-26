@@ -7,9 +7,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
   useEffect(() => {
     const getMessageList = async () => {
       try {
-        const response = await fetch('/api/messageList/whatsapp', {
-          method: 'GET'
-        });
+        const response = await fetch('/api/messageList/whatsapp');
         const data = await response.json();
 
         // Group chats by MobileNumber
@@ -28,9 +26,9 @@ const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
         }));
 
         setChats(formattedChats);
-        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch message list', error);
+      } finally {
         setLoading(false);
       }
     };
@@ -38,7 +36,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
   }, []);
 
   return (
-    <aside className={`${isOpen ? '' : 'hidden'} absolute lg:relative lg:top-0 top-16 left-0 h-full bg-white border-r border-gray-300 p-4 overflow-y-auto transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-80 lg:relative lg:w-1/4`}>
+    <aside className={`${isOpen ? '' : 'hidden'} absolute lg:relative lg:top-0 top-16 left-0 h-full bg-white border-r border-gray-300 p-4 overflow-y-auto transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-80 lg:w-1/4`}>
       <button onClick={toggleSidebar} className="lg:hidden absolute top-4 right-4">
         <span className="sr-only">Close Sidebar</span>
       </button>
@@ -47,18 +45,24 @@ const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
         {loading ? (
           <li>Loading...</li>
         ) : (
-          chats.map(({ mobileNumber, chats }) => (
-            <li 
-              key={mobileNumber} 
-              className="p-2 border-b border-gray-200 hover:bg-gray-100 cursor-pointer" 
-              onClick={() => onSelectChat(mobileNumber)}
-            >
-              <span className="font-semibold">{mobileNumber}</span>
-              <p className="text-sm text-gray-600">
-                {chats[chats.length - 1]?.generatedmessages || 'No messages'}
-              </p>
-            </li>
-          ))
+          chats.map(({ mobileNumber, chats }) => {
+            const lastChat = chats[chats.length - 1];
+            const fullName = lastChat?.Fullname || 'Unknown';
+            const lastMessage = lastChat?.generatedmessages || 'No messages';
+
+            return (
+              <li 
+                key={mobileNumber} 
+                className="p-2 border-b border-gray-200 hover:bg-gray-100 cursor-pointer" 
+                onClick={() => onSelectChat(mobileNumber)}
+              >
+                <span className="font-semibold">{fullName}</span>
+                <p className="text-sm text-gray-600">
+                  {lastMessage}
+                </p>
+              </li>
+            );
+          })
         )}
       </ul>
     </aside>

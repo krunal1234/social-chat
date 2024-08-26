@@ -5,7 +5,9 @@ import { createClient } from '../../../../../../../utils/supabase/client';
 
 const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
   const [messages, setMessages] = useState([]);
+  const [fullName, setFullName] = useState(null);
   const [chatDetails, setChatDetails] = useState({ FromNumber: '', MobileNumber: '' });
+
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -16,7 +18,7 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
           if (data.data && Array.isArray(data.data)) {
             let windowChat = data.data.filter(chat => chat.MobileNumber === activeChat);
             setMessages(windowChat);
-
+            setFullName(data.data.filter(chat => chat.Fullname != null)[0].Fullname);
             // Extracting FromNumber and MobileNumber from the first message
             if (windowChat.length > 0) {
               setChatDetails({
@@ -62,7 +64,10 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
     <main className="flex-1 bg-white p-4 flex flex-col">
       <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-4">
         <TextalignJustifyleft className="lg:hidden" onClick={toggleSidebar} />
-        <h1 className="text-xl font-semibold">{activeChat}</h1>
+        <div>
+          <h1 className="text-2xl font-bold">{fullName}</h1>
+          <h3 className="text-xl font-semibold">{activeChat}</h3>
+        </div>
         <SidebarRight size="32" onClick={toggleDrawer} />
       </div>
 
