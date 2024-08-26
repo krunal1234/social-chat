@@ -29,7 +29,7 @@ export async function POST(request) {
         try {
             const data = await request.json();
 
-            await fetch('https://social-chat-mu.vercel.app/api/webhooks/instagram', {
+            await fetch('https://social-chat-mu.vercel.app/api/webhooks/socialwebhookdata', {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: { 'Content-Type': 'application/json' }
