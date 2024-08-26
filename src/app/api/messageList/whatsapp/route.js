@@ -21,7 +21,7 @@ export async function POST(request) {
     if (request.method === 'POST') {
         try {   
             const data = await request.json(); // Parse JSON payload
-            const { ChatFrom, Fullname, MobileNumber, messageList } = data[0];
+            const { ChatFrom, Fullname, MobileNumber, messageList } = data;
 
             const existingInbox = await WhatsappMessageList.getChat(MobileNumber, ChatFrom);
 
