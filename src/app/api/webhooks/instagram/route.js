@@ -29,7 +29,13 @@ export async function POST(request) {
         try {
             const data = await request.json();
 
-            return NextResponse.json({data});
+            await fetch('https://social-chat-mu.vercel.app/api/webhooks/instagram', {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            return NextResponse.json({ success: true }, { status: 200 });
 
             if (data.entry && data.entry[0].changes && data.entry[0].changes[0].value) {
                 const value = data.entry[0].changes[0].value;
