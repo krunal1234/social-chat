@@ -36,7 +36,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
   }, []);
 
   return (
-    <aside className={`${isOpen ? '' : 'hidden'} absolute lg:relative lg:top-0 top-16 left-0 h-full bg-white border-r border-gray-300 p-4 overflow-y-auto transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-80 lg:w-1/4`}>
+    <aside className={`${isOpen ? '' : 'hidden'} absolute lg:relative lg:top-0 top-34 left-0 h-full bg-white border-r border-gray-300 p-4 overflow-y-auto transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-80 lg:w-1/4`}>
       <button onClick={toggleSidebar} className="lg:hidden absolute top-4 right-4">
         <span className="sr-only">Close Sidebar</span>
       </button>

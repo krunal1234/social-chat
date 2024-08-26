@@ -7,49 +7,49 @@ import Image from "next/image";
 
 const initialCardData = [
   {
-    icon: <Image src={"/whatsapp.svg"} alt="whatsapp-icon" width={350}/>,
+    icon: <Image src="/whatsapp.svg" alt="whatsapp-icon" width={350}  height={350}/>,
     id: 1,
     heading: "WhatsApp",
     isActive: false,
     handler: 'WhatsApp'
   },
   {
-    icon: <Image src={"/instagram.svg"} alt="instagram-icon" width={350}/>,
+    icon: <Image src={"/instagram.svg"} alt="instagram-icon" width={350}  height={350}/>,
     id: 2,
     heading: "Instagram",
     isActive: false,
     handler: 'Instagram'
   },
   {
-    icon: <Image src={"/facebook-messenger.svg"} alt="messanger-icon" width={350}/>,
+    icon: <Image src={"/facebook-messenger.svg"} alt="messanger-icon" width={350}  height={350}/>,
     id: 3,
     heading: "Messenger",
     isActive: false,
     handler: 'Messenger'
   },
   {
-    icon: <Image src={"/twitter.svg"}  alt="twitter-icon" width={350}/>,
+    icon: <Image src={"/twitter.svg"}  alt="twitter-icon" width={350}  height={350}/>,
     id: 4,
     heading: "Twitter",
     isActive: false,
     handler: 'Twitter'
   },
   {
-    icon: <Image src={"/linkedin.svg"}  alt="linkedin-icon" width={350}/>,
+    icon: <Image src={"/linkedin.svg"}  alt="linkedin-icon" width={350}  height={350}/>,
     id: 5,
     heading: "LinkedIn",
     isActive: false,
     handler: 'LinkedIn'
   },
   {
-    icon: <Image src={"/sms.svg"} alt="sms-icon" width={350}/>,
+    icon: <Image src={"/sms.svg"} alt="sms-icon" width={350}  height={350}/>,
     id: 6,
     heading: "SMS",
     isActive: false,
     handler: 'SMS'
   },
   {
-    icon: <Image src={"/email.svg"} alt="email-icon" width={350}/>,
+    icon: <Image src={"/email.svg"} alt="email-icon" width={350}  height={350}/>,
     id: 7,
     heading: "Email",
     isActive: false,
