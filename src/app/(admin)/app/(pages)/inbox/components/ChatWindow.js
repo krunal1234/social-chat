@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SidebarRight, TextalignJustifyleft } from 'iconsax-react';
 import ChatForm from './ChatForm';
 import { createClient } from '../../../../../../../utils/supabase/client';
+import './ChatWindow.css'; // Import your CSS file
 
 const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
   const [messages, setMessages] = useState([]);
   const [fullName, setFullName] = useState(null);
   const [chatDetails, setChatDetails] = useState({ FromNumber: '', MobileNumber: '' });
 
+  // Reference to the messages container
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -56,6 +59,11 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
     };
   }, [activeChat]);
 
+  useEffect(() => {
+    // Scroll to the bottom of the messages container
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const handleNewMessage = (newMessage) => {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
   };
@@ -71,7 +79,7 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
         <SidebarRight size="32" onClick={toggleDrawer} />
       </div>
 
-      <div className="flex-1 overflow-y-auto mb-4">
+      <div className="flex-1 overflow-auto scrollable-container mb-4">
         <div className="space-y-4">
           {messages.length === 0 ? (
             <p>No messages</p>
@@ -89,6 +97,8 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
               </div>
             ))
           )}
+          {/* Dummy div to serve as scroll target */}
+          <div ref={messagesEndRef} />
         </div>
       </div>
       { messages.length !== 0 && (

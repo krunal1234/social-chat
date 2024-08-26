@@ -29,58 +29,39 @@ export async function POST(request) {
         try {
             const data = await request.json();
 
-            await fetch('https://social-chat-mu.vercel.app/api/webhooks/socialwebhookdata', {
-                method: "POST",
-                body: JSON.stringify(data),
-                headers: { 'Content-Type': 'application/json' }
-            });
+            if (data.object === 'instagram') {
+                const entry = data.entry[0];
+                const changes = entry.changes[0];
+                const value = changes.value;
 
-            return NextResponse.json({ success: true }, { status: 200 });
+                if (value && value.message) {
+                    const senderId = value.sender.id;
+                    const recipientId = value.recipient.id;
+                    const timestamp = value.timestamp;
+                    const message = value.message;
 
-            if (data.entry && data.entry[0].changes && data.entry[0].changes[0].value) {
-                const value = data.entry[0].changes[0].value;
-                const metadata = value.metadata;
-                const contacts = value.contacts && value.contacts[0];
-                const messages = value.messages;
-                const statuses = value.statuses;
-
-                let sendData;
-
-                if (messages) {
-                    const message = messages[0];
-                    const messageType = message.type;
-                    let messageValue;
-
-                    if (messageType === 'text') {
-                        messageValue = message.text.body;
-                    } else if (messageType === 'button') {
-                        messageValue = message.button.payload;
-                    } else if (messageType === 'image') {
-                        messageValue = message.image.caption;
-                    }
-
-                    sendData = {
-                        ChatFrom: metadata.display_phone_number,
-                        Fullname: contacts ? contacts.profile.name : '',
-                        MobileNumber: contacts ? contacts.wa_id : '',
-                        Email: "",
+                    const sendData = {
+                        ChatFrom: senderId, // Instagram user ID of the sender
+                        Fullname: "", // Instagram API does not provide the user's name directly in this payload
+                        MobileNumber: "", // Instagram payload does not include phone numbers
+                        Email: "", // Instagram payload does not include email addresses
                         messageList: [{
-                            wamessageid: message.id,
-                            CampaignTemplateId: '',
-                            generatedmessages: messageValue || '',
-                            FileUploaded: messageType === 'image' ? message.image.id : '',
-                            FileType: messageType || "",
-                            BtnURL: "",
-                            ChatFrom: '1',
-                            status: "sent",
-                            templateType: "",
-                            BtnPayload: messageType === 'button' ? true : false,
-                            BtnPhone: "",
-                            timestamp: new Date().toISOString(),
+                            wamessageid: message.mid, // Message ID
+                            CampaignTemplateId: '', // Empty as no campaign ID provided
+                            generatedmessages: message.text, // Message text
+                            FileUploaded: '', // No file uploaded in this payload
+                            FileType: 'text', // Assuming text as file type for plain text messages
+                            BtnURL: "", // No button URL in this payload
+                            ChatFrom: '1', // Static or default value as per your needs
+                            status: "sent", // Status of the message
+                            templateType: "", // Empty as no template type provided
+                            BtnPayload: false, // No button payload
+                            BtnPhone: "", // No button phone number
+                            timestamp: new Date(timestamp * 1000).toISOString(), // Convert timestamp to ISO string
                         }]
                     };
 
-                    await fetch('https://social-chat-mu.vercel.app/api/messageList/whatsapp', {
+                    await fetch('https://social-chat-mu.vercel.app/api/messageList/instagram', {
                         method: "POST",
                         body: JSON.stringify(sendData),
                         headers: { 'Content-Type': 'application/json' }
@@ -88,7 +69,6 @@ export async function POST(request) {
 
                     return NextResponse.json({ success: true }, { status: 200 });
                 }
-
             }
 
             return NextResponse.json({ error: "Bad Request" }, { status: 400 });

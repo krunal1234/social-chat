@@ -7,3 +7,17 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
+
+.scrollable-container {
+  overflow: auto; /* Enable scrolling */
+}
+
+/* WebKit browsers */
+.scrollable-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}
+
+/* Firefox */
+.scrollable-container {
+  scrollbar-width: none; /* Hide scrollbar */
+}
