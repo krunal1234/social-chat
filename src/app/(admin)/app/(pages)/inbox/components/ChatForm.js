@@ -72,9 +72,9 @@ const ChatForm = ({ onNewMessage, FromNumber, MobileNumber , Fullname}) => {
                 src="/smile.svg"
                 onClick={toggleVisibility} 
                 alt="smile" 
-                width={8}
-                height={8}
-                className="w-8 h-8 cursor-pointer" 
+                width={20}
+                height={20}
+                className="cursor-pointer" 
               />
               {!isHidden && (
                 <Picker 

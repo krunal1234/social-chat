@@ -84,7 +84,7 @@ const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer }) => {
 
   return (
     <header className="text-white p-4 flex items-center">
-      <div className="flex space-x-6">
+      <div className="flex space-x-2 lg:space-x-4">
         {activeChannels.map(channel => (
           <button
             key={channel.id}
