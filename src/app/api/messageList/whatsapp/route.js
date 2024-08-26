@@ -25,7 +25,7 @@ export async function POST(request) {
 
             const existingInbox = await WhatsappMessageList.getChat(MobileNumber, ChatFrom);
             let result;
-            if(existingInbox){
+            if(existingInbox && existingInbox.length > 0){
                 result = await WhatsappMessageList.create({
                     user_id: existingInbox[0].user_id, // Assuming `user_id` is the primary key or identifier in your table
                     wamessageid: messageList[0].wamessageid,
