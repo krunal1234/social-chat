@@ -6,7 +6,7 @@ import { createClient } from '../../../../../../../utils/supabase/client';
 const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
   const [messages, setMessages] = useState([]);
   const [fullName, setFullName] = useState(null);
-  const [chatDetails, setChatDetails] = useState({ FromNumber: '', MobileNumber: '' });
+  const [chatDetails, setChatDetails] = useState({ FromNumber: '', MobileNumber: '' , fullName: ''});
 
   // Reference to the messages container
   const messagesEndRef = useRef(null);
@@ -25,7 +25,8 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
             if (windowChat.length > 0) {
               setChatDetails({
                 FromNumber: windowChat[0].ChatFrom,
-                MobileNumber: windowChat[0].MobileNumber
+                MobileNumber: windowChat[0].MobileNumber,
+                Fullname: windowChat[0].Fullname
               });
             }
           } else {
@@ -36,7 +37,7 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
         }
       } else {
         setMessages([]); // Clear messages when no active chat
-        setChatDetails({ FromNumber: '', MobileNumber: '' });
+        setChatDetails({ FromNumber: '', MobileNumber: '', Fullname: '' });
       }
     };
 
@@ -104,6 +105,7 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
         <ChatForm 
           onNewMessage={handleNewMessage} 
           FromNumber={chatDetails.FromNumber} 
+          Fullname={chatDetails.Fullname} 
           MobileNumber={chatDetails.MobileNumber}
         />
       )}

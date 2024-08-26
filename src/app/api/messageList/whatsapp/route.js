@@ -24,17 +24,29 @@ export async function POST(request) {
             const { ChatFrom, Fullname, MobileNumber, messageList } = data;
 
             const existingInbox = await WhatsappMessageList.getChat(MobileNumber, ChatFrom);
-
-            const result = await WhatsappMessageList.create({
-                user_id: existingInbox[0].user_id, // Assuming `user_id` is the primary key or identifier in your table
-                wamessageid: messageList[0].wamessageid,
-                generatedmessages: messageList[0].generatedmessages, 
-                ChatFrom: ChatFrom, 
-                MobileNumber: MobileNumber,
-                Fullname: Fullname ? Fullname : MobileNumber,
-                status: messageList[0].status, 
-                SentFromWhatsapp: true,
-            });
+            let result;
+            if(existingInbox){
+                result = await WhatsappMessageList.create({
+                    user_id: existingInbox[0].user_id, // Assuming `user_id` is the primary key or identifier in your table
+                    wamessageid: messageList[0].wamessageid,
+                    generatedmessages: messageList[0].generatedmessages, 
+                    ChatFrom: ChatFrom, 
+                    MobileNumber: MobileNumber,
+                    Fullname: Fullname ? Fullname : MobileNumber,
+                    status: messageList[0].status, 
+                    SentFromWhatsapp: true,
+                });
+            }else{
+                result = await WhatsappMessageList.create({
+                    wamessageid: messageList[0].wamessageid,
+                    generatedmessages: messageList[0].generatedmessages, 
+                    ChatFrom: ChatFrom, 
+                    MobileNumber: MobileNumber,
+                    Fullname: Fullname ? Fullname : MobileNumber,
+                    status: messageList[0].status, 
+                    SentFromWhatsapp: true,
+                });
+            }
 
             return NextResponse.json(result, { status: 200 });
 

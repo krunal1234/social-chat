@@ -4,9 +4,9 @@ import { Send, AttachSquare } from 'iconsax-react';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 
-const ChatForm = ({ onNewMessage, FromNumber, MobileNumber }) => {
+const ChatForm = ({ onNewMessage, FromNumber, MobileNumber , Fullname}) => {
   const [isHidden, setIsHidden] = useState(true);
-  const [formData, setFormData] = useState({ generatedmessages: '' });
+  const [formData, setFormData] = useState({ generatedmessages: '', Fullname: Fullname });
 
   const toggleVisibility = () => {
     setIsHidden(!isHidden);
@@ -31,6 +31,7 @@ const ChatForm = ({ onNewMessage, FromNumber, MobileNumber }) => {
           body: JSON.stringify({ 
             ...formData, 
             FromNumber, 
+            Fullname,
             MobileNumber 
           }),
         });
