@@ -117,7 +117,6 @@ export async function POST(request) {
                   ChatFrom: FromNumber,
                   status: "sent",
                   MobileNumber: MobileNumber,
-                  Fullname: responseData.messages[0].FullName || responseData.messages[0].FromNumber,
                   SentFromWhatsapp: false,
               });
 
