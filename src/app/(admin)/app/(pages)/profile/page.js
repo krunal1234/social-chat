@@ -35,7 +35,6 @@ const Profile = () => {
   const [selectedChannel, setSelectedChannel] = useState([]);
 
   const handleSubmit = async (event) => {
-    debugger;
     event.preventDefault();
     const formData = new FormData(event.target);
 
@@ -44,7 +43,6 @@ const Profile = () => {
 
     try {
       const result = await profileUpdate(formData);
-      debugger;
       if(result.data?.message){
         setMessage(result.data?.message);
       } else {

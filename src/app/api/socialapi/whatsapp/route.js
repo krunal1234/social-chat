@@ -21,24 +21,31 @@ export async function POST(request) {
         try {   
             // Parse the form data
             const formData = await request.formData();
-            const data = Object.fromEntries(formData);
-            const { platform, app_id, app_secret, access_token, phone, phone_id, business_id,client_id, platform_id } = data;
-            const userData = await auth.getSession();
+            
+            const getCredentialData = await whatsappCredentials.getCredential();
 
-            const result = await whatsappCredentials.create({
-                user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
-                platform,
-                app_id, 
-                app_secret, 
-                access_token, 
-                phone, 
-                phone_id, 
-                business_id,
-                client_id,
-                platform_id
-            });
-
-            return NextResponse.json(result, {
+            let data;
+            if(getCredentialData.length > 0){
+                data = await whatsappCredentials.updateCredentialData(formData);
+            }else{
+                const data = Object.fromEntries(formData);
+                const { platform, app_id, app_secret, access_token, phone, phone_id, business_id,client_id, platform_id } = data;
+                const userData = await auth.getSession();
+                const result = await whatsappCredentials.create({
+                    user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
+                    platform,
+                    app_id, 
+                    app_secret, 
+                    access_token, 
+                    phone, 
+                    phone_id, 
+                    business_id,
+                    client_id,
+                    platform_id
+                });
+            }
+            
+            return NextResponse.json({data}, {
                 status: 200
             });
         } catch (error) {

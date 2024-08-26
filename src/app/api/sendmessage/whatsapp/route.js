@@ -16,147 +16,120 @@ export async function GET(request) {
     }
 }
 export async function POST(request) {
-    if (request.method === 'POST') {
+  if (request.method === 'POST') {
       try {
-        let TotalSent = 0;
-        let TotalFail = 0;
-        const data = await request.json(); // Parse JSON payload
-        const { FromNumber, MobileNumber, generatedmessages } = data;
-        const userData = await auth.getSession();
+          let TotalSent = 0;
+          let TotalFail = 0;
 
-        const whatsappCredentialsData = await whatsappCredentials.get();
+          const data = await request.json(); // Parse JSON payload
+          const { FromNumber, MobileNumber, generatedmessages } = data;
+          const userData = await auth.getSession();
+          const whatsappCredentialsData = await whatsappCredentials.get();
 
-        FB.setAccessToken(whatsappCredentialsData[0].access_token);
-        const sendMessage = async (fieldsItem, recipient) => {
-            return new Promise((resolve) => {
-                FB.api(whatsappCredentialsData[0].phone_id + '/messages', 'POST', fieldsItem, async function (data) {
-                if (!data || data.error) {
-                    TotalFail++;
-                    resolve(false);
-                } else {
-                    TotalSent++;
-                    resolve(true);
-                }
-                if (data.messages && data.messages.length > 0) {
-                    // let sendData = {
-                    // accountId : whatsappCredentialsData[0].user_id,
-                    // FromNumber : FromNumber,
-                    // Fullname: FromNumber,
-                    // MobileNumber: MobileNumber,
-                    // Email: "",
-                    // messageList : [{
-                    //     wamessageid : data.messages[0].id,
-                    //     CampaignTemplateId :'',
-                    //     generatedmessages: generatedmessages,
-                    //     FileUploaded : UploadedFile,
-                    //     BtnURL : BTNUrl,
-                    //     FileType: FileType,
-                    //     ChatFrom: '0',
-                    //     status : data.messages[0].message_status,
-                    //     templateType : whatsappCredentialsData[0].templateType,
-                    //     BtnPayload : BTNPayload,
-                    //     BtnPhone : BTNPhone,
-                    // }]
-                    // } 
-                    
-                    const result = await WhatsappMessageList.create({
-                        user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
-                        wamessageid : data.messages[0].id,
-                        generatedmessages,
-                        ChatFrom: FromNumber,
-                        status: "sent",
-                        MobileNumber: MobileNumber,
-                        Fullname: data.messages[0].FullName ? data.messages[0].FullName : data.messages[0].FromNumber,
-                        SentFromWhatsapp: false,
-                    });
-        
-                    return NextResponse.json(result, {
-                        status: 200
-                    });
-                }
-                });
-            });
-        };
+          FB.setAccessToken(whatsappCredentialsData[0].access_token);
 
-        let fieldsItem
-        if (whatsappCredentialsData[0].variableFileDynamicValue) {
-            const imageFileID = whatsappCredentialsData[0].variableFileDynamicValue.fileId;
-            const imageFileName = whatsappCredentialsData[0].variableFileDynamicValue.fileName;
-            UploadedFile = await `https://whatsapp.dhweninfotech.com/api/fileuploadbucket/${imageFileID}/${imageFileName}`;
+          let fieldsItem;
+          const whatsappCred = whatsappCredentialsData[0];
 
-            const fileExtension = whatsappCredentialsData[0].variableFileDynamicValue.fileName.split('.').pop().toLowerCase();
-            let imageType;
-            if (fileExtension === 'png') {
-                FileType = "IMAGE";
-                fieldsItem = {
-                "messaging_product": "whatsapp",
-                "recipient_type": "individual",
-                "to": mobileNumber,
-                "type": "image",
-                "image": {
-                    "link" : UploadedFile,
-                    "caption" :generatedmessages
-                }
-                };
-            } else if (fileExtension === 'mp4' || fileExtension === '3gpp') {
-                FileType = "VIDEO";
-                fieldsItem = {
-                "messaging_product": "whatsapp",
-                "recipient_type": "individual",
-                "to": mobileNumber,
-                "type": "video",
-                "video": {
-                    "link" : UploadedFile,
-                    "caption" :generatedmessages
-                }
-                };
-            } else if (fileExtension === 'pdf' || fileExtension === 'xlx' || fileExtension === 'xlsx' || fileExtension === 'csv') {
-                FileType = "DOCUMENT";
-                fieldsItem = {
-                "messaging_product": "whatsapp",
-                "recipient_type": "individual",
-                "to": mobileNumber,
-                "type": "document",
-                "document": {
-                    "link" : UploadedFile,
-                    "caption" :generatedmessages
-                }
-                };
-            } else if (fileExtension === 'jpg' || fileExtension === 'jpeg') {
-                FileType = "IMAGE";
-                fieldsItem = {
-                "messaging_product": "whatsapp",
-                "recipient_type": "individual",
-                "to": mobileNumber,
-                "type": "image",
-                "image": {
-                    "link" : UploadedFile,
-                    "caption" :generatedmessages
-                }
-                };
-            }
-        }else{
-            fieldsItem = {
-                "messaging_product": "whatsapp",
-                "recipient_type": "individual",
-                "to": MobileNumber,
-                "type": "text",
-                "text": { 
-                "preview_url": true,
-                "body": generatedmessages
-                }
-            };
-        }
+          // Debugging: Log received data
+          console.log('Received data:', data);
 
-        // Wait for the sendMessage function to complete before moving to the next iteration
-        await sendMessage(fieldsItem,FromNumber);
+          if (whatsappCred.variableFileDynamicValue) {
+              const imageFileID = whatsappCred.variableFileDynamicValue.fileId;
+              const imageFileName = whatsappCred.variableFileDynamicValue.fileName;
+              const UploadedFile = `https://whatsapp.dhweninfotech.com/api/fileuploadbucket/${imageFileID}/${imageFileName}`;
 
-        return NextResponse.json({ success: true }, { status: 200 });
+              const fileExtension = imageFileName.split('.').pop().toLowerCase();
+              let FileType;
+
+              if (['png', 'jpg', 'jpeg'].includes(fileExtension)) {
+                  FileType = "IMAGE";
+                  fieldsItem = {
+                      "messaging_product": "whatsapp",
+                      "recipient_type": "individual",
+                      "to": MobileNumber,
+                      "type": "image",
+                      "image": {
+                          "link": UploadedFile,
+                          "caption": generatedmessages
+                      }
+                  };
+              } else if (['mp4', '3gpp'].includes(fileExtension)) {
+                  FileType = "VIDEO";
+                  fieldsItem = {
+                      "messaging_product": "whatsapp",
+                      "recipient_type": "individual",
+                      "to": MobileNumber,
+                      "type": "video",
+                      "video": {
+                          "link": UploadedFile,
+                          "caption": generatedmessages
+                      }
+                  };
+              } else if (['pdf', 'xlx', 'xlsx', 'csv'].includes(fileExtension)) {
+                  FileType = "DOCUMENT";
+                  fieldsItem = {
+                      "messaging_product": "whatsapp",
+                      "recipient_type": "individual",
+                      "to": MobileNumber,
+                      "type": "document",
+                      "document": {
+                          "link": UploadedFile,
+                          "caption": generatedmessages
+                      }
+                  };
+              }
+          } else {
+              fieldsItem = {
+                  "messaging_product": "whatsapp",
+                  "recipient_type": "individual",
+                  "to": MobileNumber,
+                  "type": "text",
+                  "text": {
+                      "preview_url": true,
+                      "body": generatedmessages
+                  }
+              };
+          }
+
+          const sendMessage = () => {
+              return new Promise((resolve, reject) => {
+                  FB.api(`${whatsappCred.phone_id}/messages`, 'POST', fieldsItem, (data) => {
+                      if (!data || data.error) {
+                          TotalFail++;
+                          reject(data.error || new Error('Unknown error'));
+                      } else {
+                          TotalSent++;
+                          resolve(data);
+                      }
+                  });
+              });
+          };
+
+          const responseData = await sendMessage();
+
+          if (responseData?.messages && responseData.messages.length > 0) {
+              const result = await WhatsappMessageList.create({
+                  user_id: userData.session.user.id,
+                  wamessageid: responseData.messages[0].id,
+                  generatedmessages,
+                  ChatFrom: FromNumber,
+                  status: "sent",
+                  MobileNumber: MobileNumber,
+                  Fullname: responseData.messages[0].FullName || responseData.messages[0].FromNumber,
+                  SentFromWhatsapp: false,
+              });
+
+              return NextResponse.json({ success : true }, { status: 200 });
+          } else {
+              return NextResponse.json({ message: responseData.error?.message || 'Unknown error occurred' }, { status: 400 });
+          }
+
       } catch (error) {
-        console.error('Error processing request:', error);
-        return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+          console.error('Error processing request:', error);
+          return NextResponse.json({ message: error.message }, { status: 500 });
       }
-    } else {
+  } else {
       return NextResponse.json({ message: `Method ${request.method} Not Allowed` }, { status: 405 });
-    }
   }
+}

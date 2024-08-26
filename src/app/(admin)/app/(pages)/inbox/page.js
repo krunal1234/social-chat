@@ -16,6 +16,9 @@ const Page = () => {
 
   const handleSelectChat = (mobileNumber) => {
     setActiveChat(mobileNumber);
+    if (window.innerWidth <= 768) {
+      setIsSidebarOpen(!isSidebarOpen);
+    }
   };
 
   return (

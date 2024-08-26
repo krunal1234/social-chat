@@ -22,10 +22,11 @@ export async function POST(request) {
         try {   
             const data = await request.json(); // Parse JSON payload
             const { ChatFrom, Fullname, MobileNumber , messageList} = data;
-            const userData = await auth.getSession();
+
+            const existingInbox = await WhatsappMessageList.getChat(MobileNumber, ChatFrom);
 
             const result = await WhatsappMessageList.create({
-                user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
+                user_id: existingInbox.user_id, // Assuming `user_id` is the primary key or identifier in your table
                 wamessageid : messageList[0].wamessageid,
                 generatedmessages : messageList[0].generatedmessages, 
                 ChatFrom, 

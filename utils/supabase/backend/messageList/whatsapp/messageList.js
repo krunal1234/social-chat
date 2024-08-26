@@ -29,6 +29,23 @@ const WhatsappMessageList = {
 
         return data;
     },
+    getChat: async (MobileNumber, ChatFrom) => {
+        const supabase = createClient();
+        
+        const userData = await auth.getSession();
+
+        const { data , error } = await supabase.from("WhatsappMessageList")
+        .select("user_id")
+        .eq("ChatFrom",ChatFrom)
+        .eq("MobileNumber",MobileNumber);
+
+        
+        if (error) {
+            return { message: error.message };
+        }
+
+        return data;
+    },
 };
 
 export default WhatsappMessageList;

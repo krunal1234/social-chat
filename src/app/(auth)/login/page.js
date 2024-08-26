@@ -24,7 +24,6 @@ export default function LoginForm() {
     const [message, setMessage] = useState('');
 
     const handleSubmit = async (event) => {
-        debugger;
         event.preventDefault();
         const formData = new FormData(event.target);
 

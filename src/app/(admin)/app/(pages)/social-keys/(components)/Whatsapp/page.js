@@ -26,7 +26,6 @@ const Whatsapp = () => {
         }
       
         const data = await response.json();
-        debugger;
         setWhatsappData(data.data[0]);
         setLoading(false);
       } catch (error) {
@@ -50,7 +49,6 @@ const Whatsapp = () => {
   };
 
   const handleSubmit = async (e) => {
-    debugger;
     e.preventDefault();
     const formData = new FormData(e.target);
     formData.append("platform","Whatsapp");
@@ -80,6 +78,11 @@ const Whatsapp = () => {
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setWhatsappData({ ...WhatsappData, [name]: value });
+  };
+
   if (loading) {
     return <main className="p-6 h-full flex-wrap flex items-center justify-center"><p>Loading...</p></main>;
   }
@@ -91,23 +94,23 @@ const Whatsapp = () => {
         <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
             <div>
                 <label>Whatsapp APP ID</label>
-                <input value={WhatsappData ? WhatsappData.app_id : ""} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='app_id'  required onKeyUp={handleKeyPress} />
+                <input value={WhatsappData ? WhatsappData.app_id : ""} onChange={handleInputChange} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='app_id'  required onKeyUp={handleKeyPress} />
             </div>
             <div>
                 <label>Mobile Number</label>
-                <input value={WhatsappData ? WhatsappData.phone : ""} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='phone' required onKeyUp={handleKeyPress} />
+                <input value={WhatsappData ? WhatsappData.phone : ""} onChange={handleInputChange} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='phone' required onKeyUp={handleKeyPress} />
             </div>
             <div>
                 <label>Phone Number ID</label>
-                <input value={WhatsappData ? WhatsappData.phone_id : ""} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='phone_id' required onKeyUp={handleKeyPress} />
+                <input value={WhatsappData ? WhatsappData.phone_id : ""} onChange={handleInputChange} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='phone_id' required onKeyUp={handleKeyPress} />
             </div>
             <div>
                 <label>WhatsApp Business Account ID</label>
-                <input value={WhatsappData ? WhatsappData.business_id : ""} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='business_id' required onKeyUp={handleKeyPress} />
+                <input value={WhatsappData ? WhatsappData.business_id : ""} onChange={handleInputChange} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='business_id' required onKeyUp={handleKeyPress} />
             </div>
             <div>
                 <label>Token</label>
-                <input value={WhatsappData ? WhatsappData.access_token : ""} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='access_token' required/>
+                <input value={WhatsappData ? WhatsappData.access_token : ""} onChange={handleInputChange} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='access_token' required/>
             </div>
             <div className='text-center'>
                 <button

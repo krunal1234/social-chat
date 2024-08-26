@@ -16,7 +16,6 @@ const channels = [
 ];
 
 async function registerUser(formData) {
-  debugger;
   const response = await fetch('/api/register', {
       method: 'POST',
       body: formData,

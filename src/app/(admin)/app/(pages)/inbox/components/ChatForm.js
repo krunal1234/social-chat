@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import Picker from 'emoji-picker-react';
 import { Send, AttachSquare } from 'iconsax-react';
+import { toast } from 'react-toastify';
 
-const ChatForm = ({ onNewMessage }) => {
+const ChatForm = ({ onNewMessage, FromNumber, MobileNumber }) => {
   const [isHidden, setIsHidden] = useState(true);
-  const [formData, setFormData] = useState({
-    generatedmessages: "",
-  });
+  const [formData, setFormData] = useState({ generatedmessages: '' });
 
   const toggleVisibility = () => {
     setIsHidden(!isHidden);
@@ -19,24 +18,27 @@ const ChatForm = ({ onNewMessage }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (formData.generatedmessages.trim()) {
-      const newMessage = { text: formData.generatedmessages, sender: 'user' };
+      const newMessage = { id: Date.now(), generatedmessages: formData.generatedmessages, SentFromWhatsapp: false };
       onNewMessage(newMessage);
-      setFormData({ generatedmessages: '' });
-      
+
       try {
-        const response = await fetch(`/api/sendmessage/whatsapp`, {
+        const response = await fetch('/api/sendmessage/whatsapp', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            ...formData, 
+            FromNumber, 
+            MobileNumber 
+          }),
         });
         const data = await response.json();
 
-        if (data.response !== '1') {
-          console.error('Failed to send message:', data.message);
+        if (data?.message) {
+          toast.error(data.message);
+        } else {
+          setFormData({ generatedmessages: '' });
         }
       } catch (error) {
         console.error('Error sending message:', error);
@@ -89,7 +91,7 @@ const ChatForm = ({ onNewMessage }) => {
               />
             </div>
             <div className="ml-2">
-              <button className="bg-blue-500 text-white p-2 rounded" type='submit'>
+              <button className="bg-blue-500 text-white p-2 rounded" type="submit">
                 <Send size="24" color="#fff" />
               </button>
             </div>

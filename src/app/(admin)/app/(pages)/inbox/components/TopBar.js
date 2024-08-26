@@ -45,7 +45,7 @@ const initialCardData = [
   },
 ];
 
-const TopBar = ({ activeTab, setActiveTab }) => {
+const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer }) => {
   const [loading, setLoading] = useState(true);
   const [activeChannels, setActiveChannels] = useState([]);
 

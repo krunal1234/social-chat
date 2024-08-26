@@ -92,7 +92,6 @@ const Channel = () => {
   }, []);
 
   const handleConnect = (platform) => {
-    debugger;
     switch (platform) {
       case 'WhatsApp':
         setActiveConnectComponent(<FacebookConnect />);
