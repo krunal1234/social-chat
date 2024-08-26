@@ -22,7 +22,7 @@ export async function POST(request) {
           let TotalFail = 0;
 
           const data = await request.json(); // Parse JSON payload
-          const { FromNumber, MobileNumber, generatedmessages } = data;
+          const { FromNumber, MobileNumber, generatedmessages, Fullname } = data;
           const userData = await auth.getSession();
           const whatsappCredentialsData = await whatsappCredentials.get();
 
@@ -113,6 +113,7 @@ export async function POST(request) {
                   user_id: userData.session.user.id,
                   wamessageid: responseData.messages[0].id,
                   generatedmessages,
+                  Fullname,
                   ChatFrom: FromNumber,
                   status: "sent",
                   MobileNumber: MobileNumber,
