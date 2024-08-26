@@ -7,6 +7,7 @@ const WebhookData = {
         const { error } = await supabase.from("WebhookData").insert({webhookData : data});
         
         if (error) {
+            
             return { message: error.message };
         }
 
