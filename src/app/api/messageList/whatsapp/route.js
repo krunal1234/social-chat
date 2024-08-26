@@ -21,28 +21,29 @@ export async function POST(request) {
     if (request.method === 'POST') {
         try {   
             const data = await request.json(); // Parse JSON payload
-            const { ChatFrom, Fullname, MobileNumber , messageList} = data[0];
+            const { ChatFrom, Fullname, MobileNumber, messageList } = data[0];
 
             const existingInbox = await WhatsappMessageList.getChat(MobileNumber, ChatFrom);
 
             const result = await WhatsappMessageList.create({
                 user_id: existingInbox[0].user_id, // Assuming `user_id` is the primary key or identifier in your table
-                wamessageid : messageList[0].wamessageid,
-                generatedmessages : messageList[0].generatedmessages, 
-                ChatFrom : ChatFrom, 
+                wamessageid: messageList[0].wamessageid,
+                generatedmessages: messageList[0].generatedmessages, 
+                ChatFrom: ChatFrom, 
                 MobileNumber: MobileNumber,
-                Fullname : Fullname ? Fullname : MobileNumber,
-                status : messageList[0].status, 
+                Fullname: Fullname ? Fullname : MobileNumber,
+                status: messageList[0].status, 
                 SentFromWhatsapp: true,
             });
 
-            return NextResponse.json(result, {
-                status: 200
-            });
+            return NextResponse.json(result, { status: 200 });
 
         } catch (error) {
-            return { message: error.message };
+            console.error("Error handling POST request:", error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
         }
+    } else {
+        return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
     }
 }
 
