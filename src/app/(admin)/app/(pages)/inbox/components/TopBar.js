@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const initialCardData = [
@@ -90,7 +91,7 @@ const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer }) => {
             className={`p-2 hover:bg-white hover:fill-white bg-gray-300 rounded ${activeTab === channel.heading.toLowerCase() ? 'bg-white' : ''}`}
             onClick={() => handleClick(channel.heading.toLowerCase())}
           >
-            <img src={channel.icon} className="w-8 h-8" alt={channel.heading} />
+            <Image src={channel.icon} className="w-8 h-8" alt={channel.heading} />
           </button>
         ))}
       </div>

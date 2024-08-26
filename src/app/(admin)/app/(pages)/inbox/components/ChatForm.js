@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Picker from 'emoji-picker-react';
 import { Send, AttachSquare } from 'iconsax-react';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
 
 const ChatForm = ({ onNewMessage, FromNumber, MobileNumber }) => {
   const [isHidden, setIsHidden] = useState(true);
@@ -66,8 +67,8 @@ const ChatForm = ({ onNewMessage, FromNumber, MobileNumber }) => {
               <input type="file" name="fileInput" className="hidden" />
             </div>
             <div className="mr-2 flex items-center">
-              <img 
-                src="https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f603.png" 
+              <Image 
+                src={"https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f603.png"}
                 onClick={toggleVisibility} 
                 alt="smile" 
                 className="w-8 h-8 cursor-pointer" 
