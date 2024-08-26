@@ -96,9 +96,9 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
               </div>
             ))
           )}
+        </div>
           {/* Dummy div to serve as scroll target */}
           <div ref={messagesEndRef} />
-        </div>
       </div>
       { messages.length !== 0 && (
         <ChatForm 
