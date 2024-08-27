@@ -23,7 +23,7 @@ export default function Page() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
           <p className="text-lg">
-            At Alinbox, our mission is to simplify your digital communication experience. We believe that managing messages across multiple social media platforms should be effortless. That's why we've created a single, unified inbox to bring all your conversations into one place, saving you time and reducing stress.
+            At Alinbox, our mission is to simplify your digital communication experience. We believe that managing messages across multiple social media platforms should be effortless. That&apos;s why we&apos;ve created a single, unified inbox to bring all your conversations into one place, saving you time and reducing stress.
           </p>
         </section>
 

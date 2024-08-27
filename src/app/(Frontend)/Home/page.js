@@ -102,7 +102,7 @@ const Home = () => {
             ].map((testimonial) => (
               <div key={testimonial.name} className="bg-gray-50 shadow rounded-lg p-6">
                 <h3 className="text-xl font-medium mb-2">{testimonial.name}</h3>
-                <p>"{testimonial.feedback}"</p>
+                <p>&quot;{testimonial.feedback}&quot;</p>
               </div>
             ))}
           </div>
