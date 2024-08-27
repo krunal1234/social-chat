@@ -2,13 +2,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { ArrowSquareRight } from 'iconsax-react';
+import { createClient } from '../../../utils/supabase/client';
 
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
 
-  // Check if user is logged in on component mount
   useEffect(() => {
+    const getUserData = async () => {
+      const supabase = new createClient();
+      const data = await supabase.auth.getUser();
+      setUser(data.data.user.aud);
+    }
+    getUserData();
   }, []);
 
   // Toggle the drawer state
@@ -46,7 +53,8 @@ const Navbar = () => {
             <Link href="/" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">Home</Link>
             <Link href="/about" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">About</Link>
             <Link href="/contact" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
-            {isLoggedIn ? (
+            {
+            user === "authenticated" ? (
               <>
                 <Link href="/app/dashboard" className="text-dark flex hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium"><span className='pr-2'>Admin</span> <ArrowSquareRight size={20}/></Link>
               </>
@@ -95,7 +103,8 @@ const Navbar = () => {
             <Link href="/about" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">About</Link>
             <Link href="/services" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">Services</Link>
             <Link href="/contact" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
-            {isLoggedIn ? (
+             {
+            user === "authenticated" ? (
               <>
                 <Link href="/app/dashboard" className="text-dark flex hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium"><span className='pr-2'>Admin</span> <ArrowSquareRight /></Link>
               </>
