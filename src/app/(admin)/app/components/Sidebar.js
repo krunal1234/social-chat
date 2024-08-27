@@ -13,7 +13,7 @@ const Sidebar = () => {
   return (
     <aside className="left-0 w-64 space-y-6 py-7">
       <div className="text-2xl font-bold text-center">
-        <Link href="/">Admin Panel</Link>
+        <Link href="/">Alinbox</Link>
       </div>
       <nav>
         <ul>

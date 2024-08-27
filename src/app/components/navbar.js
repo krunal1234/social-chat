@@ -18,10 +18,10 @@ const Navbar = () => {
 
   return (
     <div>
-      <nav className="p-4">
+      <nav className="p-4 bg-white">
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-dark text-2xl font-bold">
-            <Link href="/">Brand</Link>
+            <Link href="/">Alinbox</Link>
           </div>
           <button
             className="text-dark lg:hidden"
@@ -45,7 +45,6 @@ const Navbar = () => {
           <div className="hidden lg:flex lg:items-center lg:space-x-4">
             <Link href="/" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">Home</Link>
             <Link href="/about" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">About</Link>
-            <Link href="/services" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">Services</Link>
             <Link href="/contact" className="text-dark hover:bg-cyan-300 hover:text-dark px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
             {isLoggedIn ? (
               <>
