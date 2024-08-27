@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import InstagramMessageList from "../../../../../utils/supabase/backend/messageList/instagram/messageList";
 
 export async function GET(request) {
