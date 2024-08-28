@@ -1,7 +1,7 @@
 import { CloseCircle } from 'iconsax-react';
 import React from 'react';
 
-const Drawer = ({ isOpen, toggleDrawer }) => {
+const Drawer = ({ isOpen, activeChat, activeTab, toggleDrawer }) => {
   return (
     <aside className={`${ isOpen ? '' : 'hidden' } absolute lg:relative lg:top-0 top-0 right-0 h-full bg-white border-l border-gray-300 p-4 overflow-y-auto transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 w-80 lg:relative lg:w-1/4`}>
       <button onClick={toggleDrawer} className="absolute top-4 right-4">

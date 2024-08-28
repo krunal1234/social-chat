@@ -18,7 +18,7 @@ export async function POST(request) {
     if (request.method === 'POST') {
         try {
             const data = await request.json();
-            const { ChatFrom, Fullname, SentFromInstagram, InstaMessageId, SenderId, RecipientId, Message } = data;
+            const { ChatFrom, Fullname, SentFromInstagram, InstaMessageId, SenderId, RecipientId, Message, chatId } = data;
 
             const existingMessage = await InstagramMessageList.getByInstagramMessageList(SenderId, RecipientId);
 
@@ -26,7 +26,7 @@ export async function POST(request) {
             if (!existingMessage) {
                 result = await InstagramMessageList.create({
                     user_id: existingMessage[0].user_id, // Assuming `user_id` is the primary key or identifier in your table
-                    ChatFrom: ChatFrom,
+                    ChatFrom: chatId,
                     Fullname: Fullname || ChatFrom,
                     SentFromInstagram: SentFromInstagram,
                     InstaMessageId: InstaMessageId,
@@ -36,7 +36,7 @@ export async function POST(request) {
                 });
             } else {
                 result = await InstagramMessageList.create({
-                    ChatFrom: ChatFrom,
+                    ChatFrom: chatId,
                     Fullname: Fullname || ChatFrom,
                     SentFromInstagram: SentFromInstagram,
                     InstaMessageId: InstaMessageId,

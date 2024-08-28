@@ -7,7 +7,7 @@ import Drawer from './components/Drawer';
 
 const Page = () => {
   const [activeChat, setActiveChat] = useState(null);
-  const [activeTab, setActiveTab] = useState(null);
+  const [activeTab, setActiveTab] = useState("instagram");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -24,15 +24,15 @@ const Page = () => {
   return (
     <div className="flex flex-col h-screen">
       <TopBar
-        activeTab={!activeTab}
+        activeTab={activeTab} // No need for negation here
         setActiveTab={setActiveTab}
         toggleSidebar={toggleSidebar}
         toggleDrawer={toggleDrawer}
       />
       <div className="flex flex-1 overflow-hidden relative">
-        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} onSelectChat={handleSelectChat} />
-        <ChatWindow activeChat={activeChat} toggleSidebar={toggleSidebar} toggleDrawer={toggleDrawer} />
-        <Drawer isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
+        <Sidebar activeChat={activeChat} activeTab={activeTab} isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} onSelectChat={handleSelectChat} />
+        <ChatWindow activeChat={activeChat} activeTab={activeTab} toggleSidebar={toggleSidebar} toggleDrawer={toggleDrawer} />
+        <Drawer activeChat={activeChat} activeTab={activeTab} isOpen={isDrawerOpen} toggleDrawer={toggleDrawer} onSelectChat={handleSelectChat}/>
       </div>
     </div>
   );

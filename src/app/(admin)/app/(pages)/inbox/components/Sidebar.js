@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from '../../../../../../../utils/supabase/client';
 
-const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
+const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat }) => {
   const [loading, setLoading] = useState(true);
   const [chats, setChats] = useState([]);
   const supabase = createClient();
@@ -9,25 +9,47 @@ const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
   useEffect(() => {
     const getMessageList = async () => {
       try {
-        const response = await fetch('/api/messageList/whatsapp');
-        const data = await response.json();
+        if (activeTab === "whatsapp") {
+          const response = await fetch('/api/messageList/whatsapp');
+          const data = await response.json();
 
-        // Group chats by MobileNumber
-        const groupedChats = data.data.reduce((acc, chat) => {
-          if (!acc[chat.MobileNumber]) {
-            acc[chat.MobileNumber] = [];
-          }
-          acc[chat.MobileNumber].push(chat);
-          return acc;
-        }, {});
+          // Group chats by MobileNumber
+          const groupedChats = data.data.reduce((acc, chat) => {
+            if (!acc[chat.MobileNumber]) {
+              acc[chat.MobileNumber] = [];
+            }
+            acc[chat.MobileNumber].push(chat);
+            return acc;
+          }, {});
 
-        // Convert groupedChats to an array of objects
-        const formattedChats = Object.keys(groupedChats).map(mobileNumber => ({
-          mobileNumber,
-          chats: groupedChats[mobileNumber]
-        }));
+          // Convert groupedChats to an array of objects
+          const formattedChats = Object.keys(groupedChats).map(mobileNumber => ({
+            mobileNumber,
+            chats: groupedChats[mobileNumber]
+          }));
 
-        setChats(formattedChats);
+          setChats(formattedChats);
+        }else if(activeTab === "instagram"){
+          const response = await fetch('/api/messageList/instagram');
+          const data = await response.json();
+
+          // Group chats by MobileNumber
+          const groupedChats = data.data.reduce((acc, chat) => {
+            if (!acc[chat.SenderId]) {
+              acc[chat.SenderId] = [];
+            }
+            acc[chat.SenderId].push(chat);
+            return acc;
+          }, {});
+
+          // Convert groupedChats to an array of objects
+          const formattedChats = Object.keys(groupedChats).map(SenderId => ({
+            SenderId,
+            chats: groupedChats[SenderId]
+          }));
+
+          setChats(formattedChats);
+        }
       } catch (error) {
         console.error('Failed to fetch message list', error);
       } finally {
@@ -84,24 +106,48 @@ const Sidebar = ({ isOpen, toggleSidebar, onSelectChat }) => {
         {loading ? (
           <li>Loading...</li>
         ) : (
-          chats.map(({ mobileNumber, chats }) => {
-            const lastChat = chats[chats.length - 1];
-            const fullName = lastChat?.Fullname || 'Unknown';
-            const lastMessage = lastChat?.generatedmessages || 'No messages';
+          <>
+            {activeTab === "whatsapp" && (
+              chats.map(({ mobileNumber, chats }) => {
+                const lastChat = chats[chats.length - 1];
+                const fullName = lastChat?.Fullname || 'Unknown';
+                const lastMessage = lastChat?.generatedmessages || 'No messages';
 
-            return (
-              <li 
-                key={mobileNumber} 
-                className="p-2 border-b border-gray-200 hover:bg-gray-100 cursor-pointer" 
-                onClick={() => onSelectChat(mobileNumber)}
-              >
-                <span className="font-semibold">{fullName}</span>
-                <p className="text-sm text-gray-600">
-                  {lastMessage}
-                </p>
-              </li>
-            );
-          })
+                return (
+                  <li 
+                    key={mobileNumber} 
+                    className="p-2 border-b border-gray-200 hover:bg-gray-100 cursor-pointer" 
+                    onClick={() => onSelectChat(mobileNumber)}
+                  >
+                    <span className="font-semibold">{fullName}</span>
+                    <p className="text-sm text-gray-600">
+                      {lastMessage}
+                    </p>
+                  </li>
+                );
+              })
+            )}
+            {activeTab === "instagram" && (
+              chats.map(({ SenderId, chats }) => {
+                const lastChat = chats[chats.length - 1];
+                const fullName = lastChat?.Fullname || 'Unknown';
+                const lastMessage = lastChat?.message || 'No messages';
+
+                return (
+                  <li 
+                    key={SenderId} 
+                    className="p-2 border-b border-gray-200 hover:bg-gray-100 cursor-pointer" 
+                    onClick={() => onSelectChat(SenderId)}
+                  >
+                    <span className="font-semibold">{fullName}</span>
+                    <p className="text-sm text-gray-600">
+                      {lastMessage}
+                    </p>
+                  </li>
+                );
+              })
+            )}
+          </>
         )}
       </ul>
     </aside>

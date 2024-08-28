@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SidebarRight, TextalignJustifyleft } from 'iconsax-react';
+import { Receipt, SidebarRight, TextalignJustifyleft } from 'iconsax-react';
 import ChatForm from './ChatForm';
 import { createClient } from '../../../../../../../utils/supabase/client';
 
-const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
+const ChatWindow = ({ activeChat, activeTab, toggleDrawer, toggleSidebar }) => {
   const [messages, setMessages] = useState([]);
   const [fullName, setFullName] = useState(null);
-  const [chatDetails, setChatDetails] = useState({ FromNumber: '', MobileNumber: '' , fullName: ''});
+  const [whatsappChatDetails, setChatWhatsappDetails] = useState({ FromNumber: '', MobileNumber: '' , fullName: ''});
+  const [instagramChatDetails, setInstagramChatDetails] = useState({ SenderId : "", RecipientId : ""  , fullName: ''});
 
   // Reference to the messages container
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
-      if (activeChat) {
+      if (activeTab === "whatsapp") {
         try {
           const response = await fetch(`/api/messageList/whatsapp?mobileNumber=${activeChat}`);
           const data = await response.json();
@@ -23,7 +24,7 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
             setFullName(data.data.filter(chat => chat.Fullname != null)[0].Fullname);
             // Extracting FromNumber and MobileNumber from the first message
             if (windowChat.length > 0) {
-              setChatDetails({
+              setChatWhatsappDetails({
                 FromNumber: windowChat[0].ChatFrom,
                 MobileNumber: windowChat[0].MobileNumber,
                 Fullname: windowChat[0].Fullname
@@ -35,9 +36,32 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
         } catch (error) {
           console.error('Failed to fetch messages', error);
         }
+      }else if (activeTab === "instagram") {
+        try {
+          const response = await fetch(`/api/messageList/instagram`);
+          const data = await response.json();
+          if (data.data && Array.isArray(data.data)) {
+            let windowChat = data.data.filter(chat => chat.SenderId === activeChat);
+            setMessages(windowChat);
+            setFullName(data.data.filter(chat => chat.Fullname != null)[0].Fullname);
+            // Extracting FromNumber and MobileNumber from the first message
+            if (windowChat.length > 0) {
+              setInstagramChatDetails({
+                RecipientId: windowChat[0].RecipientId, 
+                SenderId: windowChat[0].SenderId,
+                Fullname: windowChat[0].Fullname
+              });
+            }
+          } else {
+            console.error('Unexpected response format:', data);
+          }
+        } catch (error) {
+          console.error('Failed to fetch messages', error);
+        }
       } else {
         setMessages([]); // Clear messages when no active chat
-        setChatDetails({ FromNumber: '', MobileNumber: '', Fullname: '' });
+        setChatWhatsappDetails({ FromNumber: '', MobileNumber: '', Fullname: '' });
+        setInstagramChatDetails({ SenderId : "", RecipientId : ""  , fullName: ''});
       }
     };
 
@@ -101,13 +125,26 @@ const ChatWindow = ({ activeChat, toggleDrawer, toggleSidebar }) => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      { messages.length !== 0 && (
-        <ChatForm 
-          onNewMessage={handleNewMessage} 
-          FromNumber={chatDetails.FromNumber} 
-          Fullname={chatDetails.Fullname} 
-          MobileNumber={chatDetails.MobileNumber}
-        />
+      {activeTab && messages?.length !== 0 && (
+        <>
+          {activeTab === "whatsapp" && (
+            <ChatForm 
+              onNewMessage={handleNewMessage} 
+              FromNumber={whatsappChatDetails?.FromNumber} 
+              Fullname={whatsappChatDetails?.Fullname} 
+              MobileNumber={whatsappChatDetails?.MobileNumber}
+            />
+          )}
+
+          {activeTab === "instagram" && (
+            <ChatForm 
+              onNewMessage={handleNewMessage} 
+              SenderId={instagramChatDetails?.SenderId} 
+              RecipientId={instagramChatDetails?.RecipientId} 
+              Fullname={instagramChatDetails?.Fullname}
+            />
+          )}
+        </>
       )}
     </main>
   );

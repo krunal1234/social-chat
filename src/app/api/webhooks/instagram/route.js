@@ -31,7 +31,8 @@ export async function POST(request) {
 
             if (data.object === 'instagram') {
                 const entry = data.entry[0];
-                const messaging = entry.messaging[0]; // Changed from `changes` to `messaging`
+                const messaging = entry.messaging[0];
+                const chatId = entry.id;
                 const value = messaging.message;
 
                 if (value) {
@@ -41,7 +42,7 @@ export async function POST(request) {
                     const instaMessageId = value.mid;
 
                     const sendData = {
-                        ChatFrom: senderId, // Instagram user ID of the sender
+                        ChatFrom: chatId, // Instagram user ID of the sender
                         Fullname: "", // Instagram API does not provide the user's name directly in this payload
                         SentFromInstagram: true, // Indicates the source is Instagram
                         InstaMessageId: instaMessageId, // Instagram message ID

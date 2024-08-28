@@ -51,6 +51,7 @@ const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer }) => {
   const [activeChannels, setActiveChannels] = useState([]);
 
   const handleClick = (tab) => {
+    console.log("Setting active tab to:", tab); // Debugging line
     setActiveTab(tab);
   };
 
