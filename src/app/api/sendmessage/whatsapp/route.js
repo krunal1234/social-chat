@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { FB } from "fb/lib/fb";
-import whatsappCredentials from "../../../../../utils/supabase/backend/whatsappCredentials/whatsappCrendentials";
-import WhatsappMessageList from "../../../../../utils/supabase/backend/messageList/whatsapp/messageList";
-import auth from "../../../../../utils/supabase/auth";
+import whatsappCredentials from "../../../../../utils/supabase/backend/Crendentials/whatsapp/credentials";
 
 export async function GET(request) {
     if (request.method === 'GET') {

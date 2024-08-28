@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import auth from "../../../../../utils/supabase/auth";
-import messengerCredentials from "../../../../../utils/supabase/backend/messengerCredentials/messengerCrendentials";
+import MessengerCredential from "../../../../../utils/supabase/backend/Crendentials/messenger/credentials";
 
 export async function GET(request) {
     try {
-        const data = await messengerCredentials.get();
+        const data = await MessengerCredential.get();
 
         return NextResponse.json({data}, {
             status: 200
@@ -22,11 +22,11 @@ export async function POST(request) {
             // Parse the form data
             const formData = await request.formData();
             
-            const getCredentialData = await messengerCredentials.getCredential();
+            const getCredentialData = await MessengerCredential.getCredential();
 
             let data;
             if(getCredentialData.length > 0){
-                data = await messengerCredentials.updateCredentialData(formData);
+                data = await MessengerCredential.updateCredentialData(formData);
             }else{
                 const data = Object.fromEntries(formData);
                 const { username, password } = data;

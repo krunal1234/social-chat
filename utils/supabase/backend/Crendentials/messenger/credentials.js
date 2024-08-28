@@ -1,5 +1,5 @@
-import auth from "../../auth";
-import { createClient } from "../../server";
+import auth from "../../../auth";
+import { createClient } from "../../../server";
 
 const MessengerCredential = {
     create : async (data) => {

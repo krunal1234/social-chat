@@ -1,33 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { createClient } from '../../../../../../../../utils/supabase/client';
 
-const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat }) => {
+const Sidebar = ({ isOpen, activeChat, activeTab, toggleSidebar, onSelectChat }) => {
   const [loading, setLoading] = useState(true);
   const [chats, setChats] = useState([]);
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
 
   useEffect(() => {
     const getMessageList = async () => {
       try {
-          const response = await fetch('/api/messageList/whatsapp');
-          const data = await response.json();
+        const response = await fetch('/api/messageList/whatsapp');
+        const data = await response.json();
 
-          // Group chats by MobileNumber
-          const groupedChats = data.data.reduce((acc, chat) => {
-            if (!acc[chat.MobileNumber]) {
-              acc[chat.MobileNumber] = [];
-            }
-            acc[chat.MobileNumber].push(chat);
-            return acc;
-          }, {});
+        const groupedChats = data.data.reduce((acc, chat) => {
+          if (!acc[chat.MobileNumber]) {
+            acc[chat.MobileNumber] = [];
+          }
+          acc[chat.MobileNumber].push(chat);
+          return acc;
+        }, {});
 
-          // Convert groupedChats to an array of objects
-          const formattedChats = Object.keys(groupedChats).map(mobileNumber => ({
-            mobileNumber,
-            chats: groupedChats[mobileNumber]
-          }));
+        const formattedChats = Object.keys(groupedChats).map(mobileNumber => ({
+          mobileNumber,
+          chats: groupedChats[mobileNumber]
+        }));
 
-          setChats(formattedChats);
+        setChats(formattedChats);
       } catch (error) {
         console.error('Failed to fetch message list', error);
       } finally {
@@ -36,7 +34,8 @@ const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat })
     };
     getMessageList();
 
-    // Create a new channel for real-time subscriptions
+    const supabase = supabaseRef.current;
+
     const channel = supabase
       .channel('public:WhatsappMessageList')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'WhatsappMessageList' }, payload => {
@@ -44,7 +43,6 @@ const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat })
       })
       .subscribe();
 
-    // Cleanup subscription on component unmount
     return () => {
       supabase.removeChannel(channel);
     };

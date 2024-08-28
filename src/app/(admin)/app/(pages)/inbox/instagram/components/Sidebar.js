@@ -1,41 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { createClient } from '../../../../../../../../utils/supabase/client';
 
-const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat }) => {
+const Sidebar = ({ isOpen, activeChat, activeTab, toggleSidebar, onSelectChat }) => {
   const [loading, setLoading] = useState(true);
   const [chats, setChats] = useState([]);
   const supabase = createClient();
 
-  useEffect(() => {
-    const getMessageList = async () => {
-      try {
-       if(activeTab){
-          const response = await fetch('/api/messageList/instagram');
-          const data = await response.json();
-          // Group chats by MobileNumber
-          const groupedChats = data.data.reduce((acc, chat) => {
-            if (!acc[chat.ChatFrom]) {
-              acc[chat.ChatFrom] = [];
-            }
-            acc[chat.ChatFrom].push(chat);
-            return acc;
-          }, {});
+  const fetchChats = useCallback(async () => {
+    try {
+      if (activeTab) {
+        const response = await fetch('/api/messageList/instagram');
+        const data = await response.json();
+        // Group chats by MobileNumber
+        const groupedChats = data.data.reduce((acc, chat) => {
+          if (!acc[chat.ChatFrom]) {
+            acc[chat.ChatFrom] = [];
+          }
+          acc[chat.ChatFrom].push(chat);
+          return acc;
+        }, {});
 
-          // Convert groupedChats to an array of objects
-          const formattedChats = Object.keys(groupedChats).map(SenderId => ({
-            SenderId,
-            chats: groupedChats[SenderId]
-          }));
+        // Convert groupedChats to an array of objects
+        const formattedChats = Object.keys(groupedChats).map(SenderId => ({
+          SenderId,
+          chats: groupedChats[SenderId]
+        }));
 
-          setChats(formattedChats);
-        }
-      } catch (error) {
-        console.error('Failed to fetch message list', error);
-      } finally {
-        setLoading(false);
+        setChats(formattedChats);
       }
-    };
-    getMessageList();
+    } catch (error) {
+      console.error('Failed to fetch message list', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    fetchChats();
 
     // Create a new channel for real-time subscriptions
     const channel = supabase
@@ -49,13 +50,13 @@ const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat })
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [fetchChats, supabase]);
 
   const handleNewMessage = (newMessage) => {
     setChats(prevChats => {
       const mobileNumber = newMessage.MobileNumber;
       const updatedChats = prevChats.map(chatGroup => {
-        if (chatGroup.mobileNumber === mobileNumber) {
+        if (chatGroup.SenderId === mobileNumber) {
           return {
             ...chatGroup,
             chats: [...chatGroup.chats, newMessage]
@@ -64,9 +65,9 @@ const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat })
         return chatGroup;
       });
 
-      if (!updatedChats.some(chatGroup => chatGroup.mobileNumber === mobileNumber)) {
+      if (!updatedChats.some(chatGroup => chatGroup.SenderId === mobileNumber)) {
         updatedChats.push({
-          mobileNumber,
+          SenderId: mobileNumber,
           chats: [newMessage]
         });
       }
