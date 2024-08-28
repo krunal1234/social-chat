@@ -28,10 +28,12 @@ const InstagramMessageList = {
     },
 
     // Get a specific Instagram message by its ID
-    getByInstagramMessageId: async (InstaMessageId) => {
+    getByInstagramMessageList: async (SenderId,RecipientId) => {
         const supabase = createClient();
         
-        const { data, error } = await supabase.from("InstagramMessageList").select("*").eq("InstaMessageId", InstaMessageId).single();
+        const { data, error } = await supabase.from("InstagramMessageList").select("*")
+        .eq("SenderId", SenderId)
+        .eq("RecipientId", RecipientId);
 
         if (error) {
             return { message: error.message };

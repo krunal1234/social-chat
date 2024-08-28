@@ -43,7 +43,7 @@ export async function POST(request) {
                     const sendData = {
                         ChatFrom: senderId, // Instagram user ID of the sender
                         Fullname: "", // Instagram API does not provide the user's name directly in this payload
-                        SetFromInstagram: true, // Indicates the source is Instagram
+                        SentFromInstagram: true, // Indicates the source is Instagram
                         InstaMessageId: instaMessageId, // Instagram message ID
                         SenderId: senderId, // Sender's Instagram user ID
                         RecipientId: recipientId, // Recipient's Instagram user ID
