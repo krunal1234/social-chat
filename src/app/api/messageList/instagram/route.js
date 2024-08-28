@@ -34,8 +34,7 @@ export async function POST(request) {
                     InstaMessageId: InstaMessageId,
                     SenderId: SenderId,
                     RecipientId: RecipientId,
-                    Message: Message,
-                    timestamp: timestamp
+                    Message: Message
                 });
             }
 
