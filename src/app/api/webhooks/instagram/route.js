@@ -51,7 +51,7 @@ export async function POST(request) {
                         Message: message
                     };
 
-                    await fetch('https://social-chat-mu.vercel.app/api/messageList/instagram', {
+                    await fetch('http://localhost:3000/api/messageList/instagram', {
                         method: "POST",
                         body: JSON.stringify(sendData),
                         headers: { 'Content-Type': 'application/json' }
