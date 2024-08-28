@@ -37,7 +37,6 @@ export async function POST(request) {
                 if (value) {
                     const senderId = messaging.sender.id;
                     const recipientId = messaging.recipient.id;
-                    const timestamp = messaging.timestamp;
                     const message = value.text;
                     const instaMessageId = value.mid;
 
@@ -48,8 +47,7 @@ export async function POST(request) {
                         InstaMessageId: instaMessageId, // Instagram message ID
                         SenderId: senderId, // Sender's Instagram user ID
                         RecipientId: recipientId, // Recipient's Instagram user ID
-                        Message: message, // Message text
-                        timestamp: new Date(timestamp).toISOString() // Convert timestamp to ISO string
+                        Message: message
                     };
 
                     await fetch('https://social-chat-mu.vercel.app/api/messageList/instagram', {
