@@ -27,41 +27,40 @@ const initialCardData = [
     isActive: false,
     handler: 'Messenger'
   },
-  {
-    icon: <Image src={"/twitter.svg"}  alt="twitter-icon" width={350}  height={350}/>,
-    id: 4,
-    heading: "Twitter",
-    isActive: false,
-    handler: 'Twitter'
-  },
-  {
-    icon: <Image src={"/linkedin.svg"}  alt="linkedin-icon" width={350}  height={350}/>,
-    id: 5,
-    heading: "LinkedIn",
-    isActive: false,
-    handler: 'LinkedIn'
-  },
-  {
-    icon: <Image src={"/sms.svg"} alt="sms-icon" width={350}  height={350}/>,
-    id: 6,
-    heading: "SMS",
-    isActive: false,
-    handler: 'SMS'
-  },
-  {
-    icon: <Image src={"/email.svg"} alt="email-icon" width={350}  height={350}/>,
-    id: 7,
-    heading: "Email",
-    isActive: false,
-    handler: 'Email'
-  },
+  // {
+  //   icon: <Image src={"/twitter.svg"}  alt="twitter-icon" width={350}  height={350}/>,
+  //   id: 4,
+  //   heading: "Twitter",
+  //   isActive: false,
+  //   handler: 'Twitter'
+  // },
+  // {
+  //   icon: <Image src={"/linkedin.svg"}  alt="linkedin-icon" width={350}  height={350}/>,
+  //   id: 5,
+  //   heading: "LinkedIn",
+  //   isActive: false,
+  //   handler: 'LinkedIn'
+  // },
+  // {
+  //   icon: <Image src={"/sms.svg"} alt="sms-icon" width={350}  height={350}/>,
+  //   id: 6,
+  //   heading: "SMS",
+  //   isActive: false,
+  //   handler: 'SMS'
+  // },
+  // {
+  //   icon: <Image src={"/email.svg"} alt="email-icon" width={350}  height={350}/>,
+  //   id: 7,
+  //   heading: "Email",
+  //   isActive: false,
+  //   handler: 'Email'
+  // },
 ];
 
 const Channel = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [cardData, setCardData] = useState(initialCardData);
-  const [activeConnectComponent, setActiveConnectComponent] = useState(null);
 
   useEffect(() => {
     const getUser = async () => {
@@ -95,30 +94,13 @@ const Channel = () => {
   const handleConnect = (platform) => {
     switch (platform) {
       case 'WhatsApp':
-        setActiveConnectComponent(<FacebookConnect />);
+        router.push('/app/social-keys/Whatsapp');
         break;
       case 'Instagram':
-        // setActiveConnectComponent(<InstagramConnect />);
+        router.push('/app/social-keys/Instagram');
         break;
       case 'Messenger':
-        router.push(`/app/social-keys/Whatsapp`, "success");
-        // setActiveConnectComponent(<MessengerConnect />);
-        break;
-      case 'Twitter':
-        router.push(`/app/social-keys/Twitter`, "success");
-        // setActiveConnectComponent(<TwitterConnect />);
-        break;
-      case 'LinkedIn':
-        router.push(`/app/social-keys/LinkedIn`, "success");
-        // setActiveConnectComponent(<LinkedInConnect />);
-        break;
-      case 'SMS':
-        router.push(`/app/social-keys/Whatsapp`, "success");
-        // setActiveConnectComponent(<SMSConnect />);
-        break;
-      case 'Email':
-        router.push(`/app/social-keys/Whatsapp`, "success");
-        // setActiveConnectComponent(<EmailConnect />);
+        router.push('/');
         break;
       default:
         setActiveConnectComponent(null);
@@ -152,7 +134,6 @@ const Channel = () => {
           ))}
         </div>
       </div>
-      {activeConnectComponent}
     </main>
   );
 };

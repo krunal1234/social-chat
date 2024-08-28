@@ -60,7 +60,7 @@ export default function Register() {
       <div className="bg-cyan-400 h-screen">
         <Navbar />
         <div className="flex flex-col items-center justify-between p-8">
-          <form className=" bg-white p-16 rounded-xl mx-auto" onSubmit={handleSubmit}>
+          <form className="w-2/4 bg-white p-16 rounded-xl mx-auto" onSubmit={handleSubmit}>
             <div className="text-6xl mb-12">
               Create Your Account
             </div>

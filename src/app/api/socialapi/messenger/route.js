@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import auth from "../../../../../utils/supabase/auth";
-import whatsappCredentials from "../../../../../utils/supabase/backend/Crendentials/whatsapp/credentials";
+import messengerCredentials from "../../../../../utils/supabase/backend/messengerCredentials/messengerCrendentials";
 
 export async function GET(request) {
     try {
-        const data = await whatsappCredentials.get();
+        const data = await messengerCredentials.get();
 
         return NextResponse.json({data}, {
             status: 200
@@ -22,26 +22,19 @@ export async function POST(request) {
             // Parse the form data
             const formData = await request.formData();
             
-            const getCredentialData = await whatsappCredentials.getCredential();
+            const getCredentialData = await messengerCredentials.getCredential();
 
             let data;
             if(getCredentialData.length > 0){
-                data = await whatsappCredentials.updateCredentialData(formData);
+                data = await messengerCredentials.updateCredentialData(formData);
             }else{
                 const data = Object.fromEntries(formData);
-                const { platform, app_id, app_secret, access_token, phone, phone_id, business_id,client_id, platform_id } = data;
+                const { username, password } = data;
                 const userData = await auth.getSession();
-                const result = await whatsappCredentials.create({
+                const result = await messengerCredentials.create({
                     user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
-                    platform,
-                    app_id, 
-                    app_secret, 
-                    access_token, 
-                    phone, 
-                    phone_id, 
-                    business_id,
-                    client_id,
-                    platform_id
+                    username,
+                    password, 
                 });
             }
             

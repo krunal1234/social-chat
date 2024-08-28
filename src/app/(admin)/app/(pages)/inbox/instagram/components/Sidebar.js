@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createClient } from '../../../../../../../utils/supabase/client';
+import { createClient } from '../../../../../../../../utils/supabase/client';
 
 const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat }) => {
   const [loading, setLoading] = useState(true);
@@ -9,36 +9,15 @@ const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat })
   useEffect(() => {
     const getMessageList = async () => {
       try {
-        if (activeTab === "whatsapp") {
-          const response = await fetch('/api/messageList/whatsapp');
-          const data = await response.json();
-
-          // Group chats by MobileNumber
-          const groupedChats = data.data.reduce((acc, chat) => {
-            if (!acc[chat.MobileNumber]) {
-              acc[chat.MobileNumber] = [];
-            }
-            acc[chat.MobileNumber].push(chat);
-            return acc;
-          }, {});
-
-          // Convert groupedChats to an array of objects
-          const formattedChats = Object.keys(groupedChats).map(mobileNumber => ({
-            mobileNumber,
-            chats: groupedChats[mobileNumber]
-          }));
-
-          setChats(formattedChats);
-        }else if(activeTab === "instagram"){
+       if(activeTab){
           const response = await fetch('/api/messageList/instagram');
           const data = await response.json();
-
           // Group chats by MobileNumber
           const groupedChats = data.data.reduce((acc, chat) => {
-            if (!acc[chat.SenderId]) {
-              acc[chat.SenderId] = [];
+            if (!acc[chat.ChatFrom]) {
+              acc[chat.ChatFrom] = [];
             }
-            acc[chat.SenderId].push(chat);
+            acc[chat.ChatFrom].push(chat);
             return acc;
           }, {});
 
@@ -60,8 +39,8 @@ const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat })
 
     // Create a new channel for real-time subscriptions
     const channel = supabase
-      .channel('public:WhatsappMessageList')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'WhatsappMessageList' }, payload => {
+      .channel('public:InstagramMessageList')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'InstagramMessageList' }, payload => {
         handleNewMessage(payload.new);
       })
       .subscribe();
@@ -107,31 +86,11 @@ const Sidebar = ({ isOpen, activeChat ,activeTab, toggleSidebar, onSelectChat })
           <li>Loading...</li>
         ) : (
           <>
-            {activeTab === "whatsapp" && (
-              chats.map(({ mobileNumber, chats }) => {
-                const lastChat = chats[chats.length - 1];
-                const fullName = lastChat?.Fullname || 'Unknown';
-                const lastMessage = lastChat?.generatedmessages || 'No messages';
-
-                return (
-                  <li 
-                    key={mobileNumber} 
-                    className="p-2 border-b border-gray-200 hover:bg-gray-100 cursor-pointer" 
-                    onClick={() => onSelectChat(mobileNumber)}
-                  >
-                    <span className="font-semibold">{fullName}</span>
-                    <p className="text-sm text-gray-600">
-                      {lastMessage}
-                    </p>
-                  </li>
-                );
-              })
-            )}
             {activeTab === "instagram" && (
               chats.map(({ SenderId, chats }) => {
                 const lastChat = chats[chats.length - 1];
                 const fullName = lastChat?.Fullname || 'Unknown';
-                const lastMessage = lastChat?.message || 'No messages';
+                const lastMessage = lastChat?.Message || 'No messages';
 
                 return (
                   <li 

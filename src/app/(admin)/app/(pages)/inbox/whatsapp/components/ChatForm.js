@@ -19,11 +19,7 @@ const ChatForm = ({ onNewMessage, FromNumber, MobileNumber , Fullname}) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
     if (formData.generatedmessages.trim()) {
-      // const newMessage = { id: Date.now(), generatedmessages: formData.generatedmessages, SentFromWhatsapp: false };
-      // onNewMessage(newMessage);
-
       try {
         const response = await fetch('/api/sendmessage/whatsapp', {
           method: 'POST',

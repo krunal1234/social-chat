@@ -20,30 +20,30 @@ const initialCardData = [
     heading: "Messenger",
     isActive: false,
   },
-  {
-    icon: "/twitter.svg",
-    id: 4,
-    heading: "Twitter",
-    isActive: false,
-  },
-  {
-    icon: "/linkedin.svg",
-    id: 5,
-    heading: "LinkedIn",
-    isActive: false,
-  },
-  {
-    icon: "/sms.svg",
-    id: 6,
-    heading: "SMS",
-    isActive: false,
-  },
-  {
-    icon: "/email.svg",
-    id: 7,
-    heading: "Email",
-    isActive: false,
-  },
+  // {
+  //   icon: "/twitter.svg",
+  //   id: 4,
+  //   heading: "Twitter",
+  //   isActive: false,
+  // },
+  // {
+  //   icon: "/linkedin.svg",
+  //   id: 5,
+  //   heading: "LinkedIn",
+  //   isActive: false,
+  // },
+  // {
+  //   icon: "/sms.svg",
+  //   id: 6,
+  //   heading: "SMS",
+  //   isActive: false,
+  // },
+  // {
+  //   icon: "/email.svg",
+  //   id: 7,
+  //   heading: "Email",
+  //   isActive: false,
+  // },
 ];
 
 const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer }) => {

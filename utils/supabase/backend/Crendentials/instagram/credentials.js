@@ -1,12 +1,12 @@
-import auth from "../../auth";
-import { createClient } from "../../server";
+import auth from "../../../auth";
+import { createClient } from "../../../server";
 
-const whatsappCredentials = {
+const InstagramCredential = {
     create : async (data) => {
         try {
             const supabase = createClient();
 
-            const { error } = await supabase.from("WhatsappCredentials").insert(data);
+            const { error } = await supabase.from("InstagramCredential").insert(data);
             
             if (error) {
                 return { message: error.message };
@@ -22,9 +22,8 @@ const whatsappCredentials = {
         
         const userData = await auth.getSession();
 
-        const { data , error } = await supabase.from("WhatsappCredentials")
+        const { data , error } = await supabase.from("InstagramCredential")
         .select("*")
-        .eq("platform_id","1")
         .eq("user_id",userData.session.user.id);
 
         if (error) {
@@ -39,7 +38,7 @@ const whatsappCredentials = {
         
         const userData = await auth.getSession();
 
-        const { data , error } = await supabase.from("WhatsappCredentials").select("*").eq("user_id",userData.session.user.id);
+        const { data , error } = await supabase.from("InstagramCredential").select("*").eq("user_id",userData.session.user.id);
 
         if (error) {
             return { message: error.message };
@@ -56,7 +55,7 @@ const whatsappCredentials = {
             const updateData = Object.fromEntries(formData);
             const { access_token, phone, phone_id, business_id , app_id} = updateData;
 
-            const { data , error } = await supabase.from("WhatsappCredentials").update({ 
+            const { data , error } = await supabase.from("InstagramCredential").update({ 
                 app_id: app_id, 
                 access_token: access_token, 
                 phone: phone, 
@@ -75,4 +74,4 @@ const whatsappCredentials = {
     }
 };
 
-export default whatsappCredentials;
+export default InstagramCredential;
