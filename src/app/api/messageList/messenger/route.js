@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import MessengerMessageList from "../../../../../utils/supabase/backend/messageList/Messenger/messageList";
+import MessengerMessageList from "../../../../../utils/supabase/backend/messageList/messenger/messageList";
 
 export async function GET(request) {
     if (request.method === 'GET') {
