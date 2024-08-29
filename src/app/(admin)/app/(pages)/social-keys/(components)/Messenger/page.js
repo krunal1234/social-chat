@@ -17,7 +17,7 @@ const Messenger = () => {
       try {
         
         setLoading(true);
-        const response = await fetch('/api/socialapi/Messenger', {
+        const response = await fetch('/api/socialapi/messenger', {
           method: 'GET',
         });
       
@@ -58,7 +58,7 @@ const Messenger = () => {
     setSuccess(false);
 
     try {
-      const response = await fetch('/api/socialapi/Messenger', {
+      const response = await fetch('/api/socialapi/messenger', {
         method: 'POST',
         body: formData,
       });

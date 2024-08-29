@@ -24,20 +24,20 @@ export async function POST(request) {
             
             const getCredentialData = await MessengerCredential.getCredential();
 
-            let data;
+            let result;
             if(getCredentialData.length > 0){
-                data = await MessengerCredential.updateCredentialData(formData);
+                result = await MessengerCredential.updateCredentialData(formData);
             }else{
                 const data = Object.fromEntries(formData);
                 const { access_token } = data;
                 const userData = await auth.getSession();
-                const result = await messengerCredentials.create({
+                result = await MessengerCredential.create({
                     user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
                     access_token
                 });
             }
             
-            return NextResponse.json({data}, {
+            return NextResponse.json(result, {
                 status: 200
             });
         } catch (error) {

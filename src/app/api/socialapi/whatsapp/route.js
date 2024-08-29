@@ -24,14 +24,14 @@ export async function POST(request) {
             
             const getCredentialData = await whatsappCredentials.getCredential();
 
-            let data;
+            let result;
             if(getCredentialData.length > 0){
-                data = await whatsappCredentials.updateCredentialData(formData);
+                result = await whatsappCredentials.updateCredentialData(formData);
             }else{
                 const data = Object.fromEntries(formData);
                 const { platform, app_id, app_secret, access_token, phone, phone_id, business_id,client_id, platform_id } = data;
                 const userData = await auth.getSession();
-                const result = await whatsappCredentials.create({
+                result = await whatsappCredentials.create({
                     user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
                     platform,
                     app_id, 

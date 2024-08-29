@@ -1,4 +1,3 @@
-import { IgApiClient } from "instagram-private-api";
 import { NextResponse } from "next/server";
 import InstagramCredential from "../../../../../utils/supabase/backend/Crendentials/instagram/credentials";
 
@@ -6,7 +5,7 @@ export async function POST(request) {
     const { SenderId, RecipientId, generatedmessages } = await request.json();
   
     // Replace these with your own credentials and endpoint
-    const accessToken = 'IGQWRQMUtpUFFmOU5xUld1dzY0V0lnN3BqZA2ZAmcE80Yml5X3BmcHlTMGlFODJuWkp1SmJxTjdRbDZAvbXVleUlxbzR5UUNLenM1MTBtZAWdrTW1KWUxvLTJIcUQ5aHFjN2FJMmI1M3h5VDJORjdXRVdCRHAtZAlc0U2sZD';
+    const token = await InstagramCredential.get();
     const instagramApiUrl = `https://graph.instagram.com/v20.0/${RecipientId}/messages`;
   
     try {
@@ -14,7 +13,7 @@ export async function POST(request) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${token[0].access_token}`,
         },
         body: JSON.stringify({
           recipient: { id: SenderId },

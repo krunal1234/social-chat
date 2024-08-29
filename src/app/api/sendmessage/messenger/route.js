@@ -1,19 +1,19 @@
 import { NextResponse } from "next/server";
-import InstagramCredential from "../../../../../utils/supabase/backend/Crendentials/instagram/credentials";
+import MessengerCredential from "../../../../../utils/supabase/backend/Crendentials/messenger/credentials";
 
 export async function POST(request) {
     const { SenderId, RecipientId, generatedmessages } = await request.json();
   
     // Replace these with your own credentials and endpoint
-    const accessToken = 'IGQWRQMUtpUFFmOU5xUld1dzY0V0lnN3BqZA2ZAmcE80Yml5X3BmcHlTMGlFODJuWkp1SmJxTjdRbDZAvbXVleUlxbzR5UUNLenM1MTBtZAWdrTW1KWUxvLTJIcUQ5aHFjN2FJMmI1M3h5VDJORjdXRVdCRHAtZAlc0U2sZD';
-    const instagramApiUrl = `https://graph.instagram.com/v20.0/${RecipientId}/messages`;
+    const token = await MessengerCredential.get();
+    const MessengerApiUrl = `https://graph.Messenger.com/v20.0/${RecipientId}/messages`;
   
     try {
-      const response = await fetch(instagramApiUrl, {
+      const response = await fetch(MessengerApiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${token[0].access_token}`,
         },
         body: JSON.stringify({
           recipient: { id: SenderId },
@@ -29,7 +29,7 @@ export async function POST(request) {
   
       return NextResponse.json({ success: true });
     } catch (error) {
-      console.error('Error sending Instagram message:', error);
+      console.error('Error sending Messenger message:', error);
       return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
     }
   }
