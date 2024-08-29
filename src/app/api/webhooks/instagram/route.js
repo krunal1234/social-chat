@@ -31,7 +31,7 @@ export async function POST(request) {
 
             await fetch('https://social-chat-mu.vercel.app/api/webhooks/socialwebhookdata', {
                 method: "POST",
-                body: JSON.stringify(sendData),
+                body: JSON.stringify(data),
                 headers: { 'Content-Type': 'application/json' }
             });
 
