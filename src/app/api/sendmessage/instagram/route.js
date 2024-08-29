@@ -1,21 +1,36 @@
 import { IgApiClient } from "instagram-private-api";
 import { NextResponse } from "next/server";
+import InstagramCredential from "../../../../../utils/supabase/backend/Crendentials/instagram/credentials";
 
 export async function POST(request) {
-    if (request.method === 'POST') {
-        const ig = new IgApiClient();
-        const userId = '1175532000386310';
-        try {
-            // Fetch user info
-            const other = await ig.user.search('makwanakrunal');
-            // Print full name
-            return NextResponse.json(other, { status: 200 });
-        } catch (error) {
-            if (error.message.includes('404')) {
-                return NextResponse.json('User not found. Please check the user ID.', { status: 404 });
-            } else if (error.message.includes('403')) {
-                return NextResponse.json('Access denied. Ensure you have permission to view this user.', { status: 403 });
-            }
-        }
-    }   
-}
+    const { SenderId, RecipientId, generatedmessages } = await request.json();
+  
+    // Replace these with your own credentials and endpoint
+    const accessToken = 'IGQWRQMUtpUFFmOU5xUld1dzY0V0lnN3BqZA2ZAmcE80Yml5X3BmcHlTMGlFODJuWkp1SmJxTjdRbDZAvbXVleUlxbzR5UUNLenM1MTBtZAWdrTW1KWUxvLTJIcUQ5aHFjN2FJMmI1M3h5VDJORjdXRVdCRHAtZAlc0U2sZD';
+    const instagramApiUrl = `https://graph.instagram.com/v20.0/${RecipientId}/messages`;
+  
+    try {
+      const response = await fetch(instagramApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          recipient: { id: SenderId },
+          message: { text: generatedmessages },
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        return NextResponse.json({ message: data.error.message }, { status: response.status });
+      }
+  
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error('Error sending Instagram message:', error);
+      return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    }
+  }
