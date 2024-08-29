@@ -56,11 +56,7 @@ const InstagramCredential = {
             const { access_token, phone, phone_id, business_id , app_id} = updateData;
 
             const { data , error } = await supabase.from("InstagramCredential").update({ 
-                app_id: app_id, 
                 access_token: access_token, 
-                phone: phone, 
-                phone_id: phone_id, 
-                business_id: business_id,
             }).eq("user_id",userData.session.user.id);
 
             if (error) {

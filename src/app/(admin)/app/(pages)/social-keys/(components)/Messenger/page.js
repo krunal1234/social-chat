@@ -93,12 +93,8 @@ const Messenger = () => {
         <h1 className='text-4xl mb-5 font-bold'>Messenger Credentials</h1>
         <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
             <div>
-                <label>Username</label>
-                <input value={MessengerData ? MessengerData.username : ""} onChange={handleInputChange} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='username'  required onKeyUp={handleKeyPress} />
-            </div>
-            <div>
-                <label>Password</label>
-                <input value={MessengerData ? MessengerData.password : ""} onChange={handleInputChange} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='password' name='password' required onKeyUp={handleKeyPress} />
+                <label>Access Token</label>
+                <input value={MessengerData ? MessengerData.access_token : ""} onChange={handleInputChange} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3' type='text' name='access_token'  required onKeyUp={handleKeyPress} />
             </div>
             <div className='text-center'>
                 <button

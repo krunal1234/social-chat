@@ -29,12 +29,11 @@ export async function POST(request) {
                 data = await MessengerCredential.updateCredentialData(formData);
             }else{
                 const data = Object.fromEntries(formData);
-                const { username, password } = data;
+                const { access_token } = data;
                 const userData = await auth.getSession();
                 const result = await messengerCredentials.create({
                     user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
-                    username,
-                    password, 
+                    access_token
                 });
             }
             
