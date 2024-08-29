@@ -6,7 +6,7 @@ export async function POST(request) {
   
     // Replace these with your own credentials and endpoint
     const token = await InstagramCredential.get();
-    const instagramApiUrl = `https://graph.instagram.com/v20.0/${RecipientId}/messages`;
+    const instagramApiUrl = `https://graph.instagram.com/v20.0/${SenderId}/messages`;
   
     try {
       const response = await fetch(instagramApiUrl, {
@@ -16,7 +16,7 @@ export async function POST(request) {
           'Authorization': `Bearer ${token[0].access_token}`,
         },
         body: JSON.stringify({
-          recipient: { id: SenderId },
+          recipient: { id: RecipientId },
           message: { text: generatedmessages },
         }),
       });
