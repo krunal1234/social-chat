@@ -29,6 +29,14 @@ export async function POST(request) {
         try {
             const data = await request.json();
 
+            await fetch('https://social-chat-mu.vercel.app/api/messageList/instagram', {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            return NextResponse.json({ success: true }, { status: 200 });
+
             if (data.object === 'messenger') {
                 const entry = data.entry[0];
                 const messaging = entry.messaging[0];
