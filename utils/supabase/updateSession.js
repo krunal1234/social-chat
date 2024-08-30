@@ -32,14 +32,20 @@ export async function updateSession(request) {
     const url = request.nextUrl.clone();
 
     if (session?.user) {
-      if (url.pathname.startsWith('/login') || url.pathname.startsWith('/register') || url.pathname.startsWith('/auth')) {
+      if (url.pathname.startsWith('/login') || url.pathname.startsWith('/register')) {
         const redirectUrl = new URL('/app/dashboard', request.url);
         return NextResponse.redirect(redirectUrl);
       }
     } else {
-      if (!url.pathname.startsWith('/login') && !url.pathname.startsWith('/register') && !url.pathname.startsWith('/auth')) {
-        const redirectUrl = new URL('/login', request.url);
-        return NextResponse.redirect(redirectUrl);
+      if (url.pathname.startsWith('/login') || url.pathname.startsWith('/register')) {
+        return NextResponse.next();
+      }else{
+        if (url.pathname.startsWith('/app')){
+          const redirectUrl = new URL('/login', request.url);
+          return NextResponse.redirect(redirectUrl);
+        }else{
+          return NextResponse.next();
+        }
       }
     }
   } catch (err) {
