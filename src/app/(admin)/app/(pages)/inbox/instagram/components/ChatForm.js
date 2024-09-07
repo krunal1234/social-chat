@@ -4,7 +4,7 @@ import { Send, AttachSquare } from 'iconsax-react';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 
-const ChatForm = ({ onNewMessage, activeTab, SenderId, RecipientId , Fullname}) => {
+const ChatForm = ({ onNewMessage, activeTab, SenderId, RecipientId , Fullname, setLoading}) => {
   const [isHidden, setIsHidden] = useState(true);
   const [formData, setFormData] = useState({ generatedmessages: '', Fullname: Fullname });
 
@@ -19,6 +19,7 @@ const ChatForm = ({ onNewMessage, activeTab, SenderId, RecipientId , Fullname}) 
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if(activeTab){
       if (formData.generatedmessages.trim()) {
         try {
@@ -39,6 +40,7 @@ const ChatForm = ({ onNewMessage, activeTab, SenderId, RecipientId , Fullname}) 
           } else {
             setFormData({ generatedmessages: '' });
           }
+          setLoading(false);
         } catch (error) {
           console.error('Error sending message:', error);
         }

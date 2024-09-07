@@ -5,6 +5,7 @@ import { createClient } from '../../../../../../../../utils/supabase/client';
 
 const ChatWindow = ({ activeChat, activeTab, toggleDrawer, toggleSidebar }) => {
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [fullName, setFullName] = useState(null);
   const [instagramChatDetails, setInstagramChatDetails] = useState({ SenderId : "", RecipientId : ""  , fullName: ''});
 
@@ -12,6 +13,7 @@ const ChatWindow = ({ activeChat, activeTab, toggleDrawer, toggleSidebar }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
+    setLoading(false);
     const fetchMessages = async () => {
       if (activeChat) {
         try {
@@ -67,6 +69,10 @@ const ChatWindow = ({ activeChat, activeTab, toggleDrawer, toggleSidebar }) => {
     // Scroll to the bottom of the messages container
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  if (loading) {
+    return <main className="p-6 h-full flex-wrap flex items-center justify-center"><p>Loading...</p></main>;
+  }
 
   return (
     <main className="flex-1 bg-white p-4 flex flex-col">

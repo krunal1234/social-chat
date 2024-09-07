@@ -46,8 +46,7 @@ const initialCardData = [
   // },
 ];
 
-const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer }) => {
-  const [loading, setLoading] = useState(true);
+const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer, setLoading }) => {
   const [activeChannels, setActiveChannels] = useState([]);
 
   const handleClick = (tab) => {
@@ -56,6 +55,7 @@ const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchActiveChannels = async () => {
       try {
         const response = await fetch('/api/user');
@@ -67,21 +67,16 @@ const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer }) => {
           ...card,
           isActive: activeChannelIds.has(card.id),
         }));
+        setLoading(true);
 
         setActiveChannels(updatedCardData.filter(card => card.isActive));
-        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch active channels', error);
-        setLoading(false);
       }
     };
 
     fetchActiveChannels();
   }, []);
-
-  if (loading) {
-    return <main className="p-6 h-full flex-wrap flex items-center justify-center"><p>Loading...</p></main>;
-  }
 
   return (
     <header className="text-white p-4 flex items-center">

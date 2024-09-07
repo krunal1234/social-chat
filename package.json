@@ -11,10 +11,12 @@
   "dependencies": {
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.45.1",
+    "country-state-city": "^3.2.1",
     "emoji-picker-react": "^4.11.1",
     "fb": "^2.0.0",
     "iconsax-react": "^0.0.8",
     "instagram-private-api": "^1.46.1",
+    "mdb-react-ui-kit": "^8.0.0",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
