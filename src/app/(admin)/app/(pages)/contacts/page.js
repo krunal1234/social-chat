@@ -121,7 +121,7 @@ const Contacts = () => {
     // Perform form submission logic, e.g., API call
     try {
       if(groupFormData.groupId){
-        const response = await axios.patch(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/groups' , {
+        const response = await axios.patch(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + '/groups' , {
           groupId: groupFormData.groupId,
           groupName: groupFormData.groupName,
           selectedContacts: groupFormData.selectedContacts
@@ -133,7 +133,7 @@ const Contacts = () => {
           toast(response.data.message)
         }
       }else{
-        const response = await axios.post(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/groups', groupFormData);
+        const response = await axios.post(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + '/groups', groupFormData);
         if(response.data.success){
           toast(response.data.message);
           fetchData();
@@ -171,7 +171,7 @@ const Contacts = () => {
     // Perform form submission logic, e.g., API call
     try {
       if(formData.contactId){
-        const response = await axios.patch(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/contacts/', {
+        const response = await axios.patch(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + '/contacts/', {
           fullname: formData.fullname,
           country: formData.country,
           mobilenumber: formData.mobilenumber,
@@ -184,7 +184,7 @@ const Contacts = () => {
         }
         fetchData();
       }else{
-        const response = await axios.post(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/contacts', formData);
+        const response = await axios.post(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + '/contacts', formData);
         if(response.data.success){
          fetchData();
         }else{
@@ -200,7 +200,7 @@ const Contacts = () => {
 
   const deleteRecord = async (contactId) => {
     try {
-      await axios.delete(process.env.NEXT_PUBLIC_REACT_APP_API_URL + `/contacts`, {
+      await axios.delete(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + `/contacts`, {
         data : { "id" : contactId }
       });
       toast('Contact deleted successfully');
@@ -212,7 +212,7 @@ const Contacts = () => {
 
   const deleteGroupRecord = async (groupId) => {
     try {
-      await axios.delete(process.env.NEXT_PUBLIC_REACT_APP_API_URL + `/groups/`, {
+      await axios.delete(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + `/groups/`, {
         data : { "id" : groupId }
       });
       toast('Group deleted successfully');
@@ -230,11 +230,11 @@ const Contacts = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/contacts');
+      const response = await axios.get(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + '/contacts');
       if(response.data.data.length > 0){
         setcontactData(response.data.data);
       }
-      const groupresponse = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/groups');
+      const groupresponse = await axios.get(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + '/groups');
       if(groupresponse.data.data.length > 0){
         setgroupData(groupresponse.data.data);
       }
@@ -246,11 +246,11 @@ const Contacts = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/contacts');
+        const response = await axios.get(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + '/contacts');
         if(response.data.data.length > 0){
           setcontactData(response.data.data);
         }
-        const groupresponse = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/groups');
+        const groupresponse = await axios.get(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + '/groups');
         if(groupresponse.data.data.length > 0){
           setgroupData(groupresponse.data.data);
         }

@@ -13,7 +13,6 @@ const Navbar = () => {
     const getUserData = async () => {
       const supabase = new createClient();
       const data = await supabase.auth.getUser();
-      debugger;
       setUser(data.data.user?.aud);
     }
     getUserData();

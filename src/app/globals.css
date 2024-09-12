@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root{
+	--primary-color: #007bff;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -22,4 +23,129 @@ p{
 /* Firefox */
 .scrollable-container {
   scrollbar-width: none; /* Hide scrollbar */
+}
+
+a{
+	color:#333;
+}
+
+ul{
+	list-style: none;
+    padding-left: 0;
+}
+ul li a{
+	display: flex;
+	align-items: center;
+	font-size: 16px;
+}
+
+.sidebar ul li {
+    padding: 15px 20px;
+}
+
+ul li svg{
+	margin-right:15px;
+}
+.Loading{
+	position: fixed;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	text-align: center;
+	background: #FFF;
+}
+.templateButton{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding-left: 0px;
+    padding-right: 0;
+}
+.sidebar-open .sidebar {
+    border-right: 1px solid #e1e1e1;
+    height: 100%;
+    position: fixed;
+    background: #FFF;
+    box-shadow: 1px 5px 8px #e1e1e1;
+    z-index: 1;
+}
+
+.sidebar-open .main-content{
+	width: calc(100% - 250px);
+    margin-left: 250px;
+}
+.sidebar-close .sidebar {
+    border-right: 1px solid #e1e1e1;
+    height: 100%;
+    position: fixed;
+    background: #FFF;
+    box-shadow: 1px 5px 8px #e1e1e1;
+    z-index: 1;
+    display: none;
+}
+.sidebar-open .tooglesidebar{
+    position: fixed;
+    left: 250px;
+    background: #FFF;
+    z-index: 9;
+    bottom: 0px;
+    cursor: pointer;
+    padding: 10px;
+}
+.sidebar-close .tooglesidebar{
+    position: fixed;
+    left: 0;
+    background: #FFF;
+    z-index: 9;
+    bottom: 0px;
+    cursor: pointer;
+    padding: 10px;
+}
+.sidebar-close .main-content{
+	width: 100%;
+    margin-left: 0px;
+}
+.content {
+    width: 100%;
+    background: #F7F7FC;
+}
+.buttonStep{
+    width: calc(100% - 250px);
+    position: fixed;
+    bottom: 0;
+    background: #FFF;
+    padding: 10px;
+    border-top: 1px solid #e1e1e1;
+    z-index: 9999;
+}
+.logoPreview{
+    background: #eee;
+    width: 35px;
+    height: 35px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card.green-card {
+    background: #EBF5D4;
+}
+
+.card.red-card {
+    background: #FBE6CE;
+}
+
+.card.yellow-card {
+    background: #fbffae;
+}
+
+
+@media only screen and (max-width : 576px){
+    
+    .main-content{
+        width: 100%;
+        margin-left: 0;
+    }
 }

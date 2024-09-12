@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import auth from "../../../../utils/supabase/auth";
-import GroupsList from "../../../../utils/supabase/backend/groups/groupsList";
+import GroupsList from "../../../../utils/supabase/backend/groups/groups";
 
 export async function GET(request) {
     if (request.method === 'GET') {

@@ -22,7 +22,7 @@ export async function updateSession(request) {
   });
 
   try {
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const { data: { user }, error } = await supabase.auth.getUser();
 
     if (error) {
       console.error('Error fetching session:', error);
@@ -31,7 +31,7 @@ export async function updateSession(request) {
 
     const url = request.nextUrl.clone();
 
-    if (session?.user) {
+    if (user) {
       if (url.pathname.startsWith('/login') || url.pathname.startsWith('/register')) {
         const redirectUrl = new URL('/app/dashboard', request.url);
         return NextResponse.redirect(redirectUrl);

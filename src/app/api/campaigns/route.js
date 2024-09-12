@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import auth from "../../../../utils/supabase/auth";
-import ContactsList from "../../../../utils/supabase/backend/contacts/contacts";
+import WhatsappCampaignsList from "../../../../utils/supabase/backend/campaigns/campaigns";
 
 export async function GET(request) {
     if (request.method === 'GET') {
         try {
-            const data = await ContactsList.get();
+            const data = await WhatsappCampaignsList.get();
             return NextResponse.json({ data }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ error: "Failed to get Instagram messages: " + error.message }, { status: 403 });
@@ -21,13 +21,13 @@ export async function POST(request) {
             const data = await request.json();
             const { email, fullname , mobilenumber, country } = data;
 
-            const existingMessage = await ContactsList.getByContactsList(mobilenumber);
+            const existingMessage = await WhatsappCampaignsList.getByWhatsappCampaignsList(mobilenumber);
 
             const userData = await auth.getSession();
 
             let result;
             if (!existingMessage) {
-                result = await ContactsList.update({
+                result = await WhatsappCampaignsList.update({
                     user_id: userData.session.user.id,
                     fullname : fullname,
                     country: country,
@@ -38,7 +38,7 @@ export async function POST(request) {
                     IsDeleted: 0
                 });
             } else {
-                result = await ContactsList.create({
+                result = await WhatsappCampaignsList.create({
                     user_id: userData.session.user.id,
                     fullname : fullname,
                     country: country,
@@ -66,7 +66,7 @@ export async function PATCH(request) {
             const data = await request.json();
             const { email, fullname , mobilenumber, country } = data;
 
-            const result = await ContactsList.update({
+            const result = await WhatsappCampaignsList.update({
                 fullname : fullname,
                 country: country,
                 mobilenumber: mobilenumber,

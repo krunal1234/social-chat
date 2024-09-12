@@ -46,7 +46,7 @@ const Sidebar = () => {
             <Link
               href="/app/contacts"
               className={`flex p-3 items-center text-xl font-bold hover:text-cyan-500 hover:border-r-4 hover:border-cyan-500 ${
-                isActive('/app/social-keys') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
+                isActive('/app/contacts') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
               }`}
             >
               <Book className="mr-3" size={25} />
@@ -97,9 +97,9 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              href="/app/social-keys"
+              href="/app/flows"
               className={`flex p-3 items-center text-xl font-bold hover:text-cyan-500 hover:border-r-4 hover:border-cyan-500 ${
-                isActive('/app/social-keys') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
+                isActive('/app/flows') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
               }`}
             >
               <Shuffle className="mr-3" size={25} />
@@ -108,9 +108,9 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              href="/app/social-keys"
+              href="/app/templates"
               className={`flex p-3 items-center text-xl font-bold hover:text-cyan-500 hover:border-r-4 hover:border-cyan-500 ${
-                isActive('/app/social-keys') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
+                isActive('/app/templates') ? 'border-r-4 border-cyan-500 text-cyan-500' : 'text-black'
               }`}
             >
               <ReceiptItem className="mr-3" size={25} />
