@@ -262,53 +262,57 @@ const Contacts = () => {
 
   }, [setcontactData, setgroupData]);
 
-   return (
+  return (
     <div className="container-fluid mt-3">
       <div className="text-end">
-          <MDBBtn onClick={toggleOpen} className='ms-3'>Create Contact</MDBBtn>
-          <MDBBtn onClick={toggleGroupModal} className='ms-3'>Create Group</MDBBtn>
-        </div>
-        <MDBModal open={basicModal} tabIndex='-1' toggle="false">
-          <MDBModalDialog>
-            <MDBModalContent>
-              <MDBModalHeader>
-                <MDBModalTitle>Create Contact</MDBModalTitle>
-                <MDBBtn className='btn-close' color='none' onClick={() => toggleOpen()}></MDBBtn>
-              </MDBModalHeader>
-              <MDBModalBody>
-                <form onSubmit={handleFormSubmit}>
-                  <div style={{ display : 'none', border: '0'}}>
-                    <MDBInput className='mb-4' type='hidden' name='accountId' value={formData.accountId} required onChange={handleInputChange} />
-                    <MDBInput className='mb-4' type='hidden' name='contactId' value={formData.contactId} required onChange={handleInputChange} />
-                  </div>
-                  <MDBInput className='mb-4' type='text' name='fullname' value={formData.fullname} required label='Full Name' onChange={handleInputChange}/>
-                  <Select
-                    className='mb-4'
-                    options={countryOptions}
-                    isSearchable
-                    label='Select Country'
-                    name='country'
-                    required
-                    value={formData.country}
-                    onChange={handleCountryChange}
-                  />
-                  <MDBInput className='mb-4' type='text' name='mobilenumber' value={formData.mobilenumber} required label='Mobile Number' onChange={handleInputChange} />
-                  <MDBInput className='mb-4' type='email' name='email' value={formData.email} label='Email' required onChange={handleInputChange} />
-                  <div className="d-flex" style={{ justifyContent: 'space-around' }}> 
-                    <MDBBtn type='submit'>
-                      Save
-                    </MDBBtn>
-                    <MDBBtn color='secondary' type="button" onClick={toggleOpen}>
-                      Close
-                    </MDBBtn>
-                  </div>
-                </form>
-              </MDBModalBody>
-            </MDBModalContent>
-          </MDBModalDialog>
-        </MDBModal>
-        <MDBModal open={groupModal} tabIndex='-1' toggle="false">
-        <MDBModalDialog>
+        <MDBBtn onClick={toggleOpen} className='ms-3'>Create Contact</MDBBtn>
+        <MDBBtn onClick={toggleGroupModal} className='ms-3'>Create Group</MDBBtn>
+      </div>
+      
+      {/* Modal for Create Contact */}
+      <MDBModal open={basicModal} tabIndex='-1' toggle="false">
+        <MDBModalDialog size="lg">
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle>Create Contact</MDBModalTitle>
+              <MDBBtn className='btn-close' color='none' onClick={() => toggleOpen()}></MDBBtn>
+            </MDBModalHeader>
+            <MDBModalBody>
+              <form onSubmit={handleFormSubmit}>
+                <div style={{ display: 'none', border: '0' }}>
+                  <MDBInput className='mb-4' type='hidden' name='accountId' value={formData.accountId} required onChange={handleInputChange} />
+                  <MDBInput className='mb-4' type='hidden' name='contactId' value={formData.contactId} required onChange={handleInputChange} />
+                </div>
+                <MDBInput className='mb-4' type='text' name='fullname' value={formData.fullname} required label='Full Name' onChange={handleInputChange} />
+                <Select
+                  className='mb-4'
+                  options={countryOptions}
+                  isSearchable
+                  label='Select Country'
+                  name='country'
+                  required
+                  value={formData.country}
+                  onChange={handleCountryChange}
+                />
+                <MDBInput className='mb-4' type='text' name='mobilenumber' value={formData.mobilenumber} required label='Mobile Number' onChange={handleInputChange} />
+                <MDBInput className='mb-4' type='email' name='email' value={formData.email} label='Email' required onChange={handleInputChange} />
+                <div className="d-flex justify-content-between">
+                  <MDBBtn type='submit'>
+                    Save
+                  </MDBBtn>
+                  <MDBBtn color='secondary' type="button" onClick={toggleOpen}>
+                    Close
+                  </MDBBtn>
+                </div>
+              </form>
+            </MDBModalBody>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
+  
+      {/* Modal for Create Group */}
+      <MDBModal open={groupModal} tabIndex='-1' toggle="false">
+        <MDBModalDialog size="lg">
           <MDBModalContent>
             <MDBModalHeader>
               <MDBModalTitle>Create Group</MDBModalTitle>
@@ -327,7 +331,7 @@ const Contacts = () => {
                   value={groupFormData.selectedContacts}
                   onChange={(selectedOptions) => setGroupFormData({ ...groupFormData, selectedContacts: selectedOptions })}
                 />
-                <div className="d-flex" style={{ justifyContent: 'space-around' }}>
+                <div className="d-flex justify-content-between">
                   <MDBBtn type='submit'>
                     Create Group
                   </MDBBtn>
@@ -340,117 +344,109 @@ const Contacts = () => {
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
-      <div>
-        
+      
       <MDBCard className="card mt-3">
-          <MDBCardBody className="card-body">
-            <MDBTabs className='mb-3'>
-              <MDBTabsItem>
-                <MDBTabsLink onClick={() => handleBasicClick('tab1')} active={basicActive === 'tab1'}>
-                  Contacts
-                </MDBTabsLink>
-              </MDBTabsItem>
-              <MDBTabsItem>
-                <MDBTabsLink onClick={() => handleBasicClick('tab2')} active={basicActive === 'tab2'}>
-                  Groups
-                </MDBTabsLink>
-              </MDBTabsItem>
-            </MDBTabs>
-            <MDBTabsContent>
-              <MDBTabsPane open={basicActive === 'tab1'}>
-                    <div className="row">
-                      <div className="col-md-12">
-                      <MDBTable>
-                        <MDBTableHead>
-                          <tr>
-                            <th scope='col'>
-                            </th>
-                            <th scope='col'>#</th>
-                            <th scope='col'>fullname</th>
-                            <th scope='col'>country</th>
-                            <th scope='col'>MobileNumber</th>
-                            <th scope='col'>Email</th>
-                            <th scope='col'>Action</th>
-                          </tr>
-                        </MDBTableHead>
-                        <MDBTableBody>
-                          {Array.isArray(contactData) && contactData.length === 0 ? (
-                              <tr>
-                                <td colSpan="7" align="center">No data available</td>
-                              </tr>
-                            ) : (
-                              contactData.map((contact, index) => (
-                                <tr key={index}>
-                                  <td>
-                                    <input type="checkbox" onChange={(e) => handleContactCheckboxChange(contact, e.target.checked)}/>
-                                  </td>
-                                  <th scope='row'>{index + 1}</th>
-                                  <td>{contact.fullname}</td>
-                                  <td>{contact.country.label}</td>
-                                  <td>{contact.mobilenumber}</td>
-                                  <td>{contact.email}</td>
-                                  <td> 
-                                    <MDBDropdown>
-                                      <MDBDropdownToggle>Action</MDBDropdownToggle>
-                                      <MDBDropdownMenu>
-                                        <MDBDropdownItem className="px-3 py-2" onClick={() => deleteRecord(contact.id)}>Delete</MDBDropdownItem>
-                                        <MDBDropdownItem className="px-3 py-2" onClick={() => toggleOpen(contact)}>Edit</MDBDropdownItem>
-                                      </MDBDropdownMenu>
-                                    </MDBDropdown>
-                                  </td>
-                                </tr>
-                              ))
-                            )}
-
-                        </MDBTableBody>
-                      </MDBTable>
-                      </div>
-                    </div>
-              </MDBTabsPane>
-              <MDBTabsPane open={basicActive === 'tab2'}>
-                    <div className="row">
-                      <div className="col-md-12">
-                      <MDBTable>
-                        <MDBTableHead>
-                          <tr>
-                            <th scope='col'>#</th>
-                            <th scope='col'>Group Name</th>
-                            <th scope='col'>Contacts</th>
-                            <th scope='col'>Action</th>
-                          </tr>
-                        </MDBTableHead>
-                        <MDBTableBody>
-                          {Array.isArray(groupData) && groupData.length === 0 ? (
-                              <tr>
-                                <td colSpan="6" align="center">No data available</td>
-                              </tr>
-                            ) : (
-                              groupData.map((group, index) => (
-                                <tr key={index}>
-                                  <th scope='row'>{index + 1}</th>
-                                  <td>{group.groupName}</td>
-                                  <td>{group.selectedContacts.length}</td>
-                                  <td> 
-                                    <MDBDropdown>
-                                      <MDBDropdownToggle>Action</MDBDropdownToggle>
-                                      <MDBDropdownMenu>
-                                        <MDBDropdownItem className="px-3 py-2" onClick={() => deleteGroupRecord(group.id)}>Delete</MDBDropdownItem>
-                                        <MDBDropdownItem className="px-3 py-2" onClick={() => toggleGroupModal(group)}>Edit</MDBDropdownItem>
-                                      </MDBDropdownMenu>
-                                    </MDBDropdown>
-                                  </td>
-                                </tr>
-                              ))
-                            )}
-                        </MDBTableBody>
-                      </MDBTable>
-                      </div>
-                    </div>
-              </MDBTabsPane>
-            </MDBTabsContent>
-          </MDBCardBody>
-        </MDBCard>
-      </div>
+        <MDBCardBody className="card-body">
+          <MDBTabs className='mb-3'>
+            <MDBTabsItem>
+              <MDBTabsLink onClick={() => handleBasicClick('tab1')} active={basicActive === 'tab1'}>
+                Contacts
+              </MDBTabsLink>
+            </MDBTabsItem>
+            <MDBTabsItem>
+              <MDBTabsLink onClick={() => handleBasicClick('tab2')} active={basicActive === 'tab2'}>
+                Groups
+              </MDBTabsLink>
+            </MDBTabsItem>
+          </MDBTabs>
+          <MDBTabsContent>
+            <MDBTabsPane open={basicActive === 'tab1'}>
+              <div className="table-responsive">
+                <MDBTable>
+                  <MDBTableHead>
+                    <tr>
+                      <th scope='col'></th>
+                      <th scope='col'>#</th>
+                      <th scope='col'>Full Name</th>
+                      <th scope='col'>Country</th>
+                      <th scope='col'>Mobile Number</th>
+                      <th scope='col'>Email</th>
+                      <th scope='col'>Action</th>
+                    </tr>
+                  </MDBTableHead>
+                  <MDBTableBody>
+                    {Array.isArray(contactData) && contactData.length === 0 ? (
+                      <tr>
+                        <td colSpan="7" align="center">No data available</td>
+                      </tr>
+                    ) : (
+                      contactData.map((contact, index) => (
+                        <tr key={index}>
+                          <td>
+                            <input type="checkbox" onChange={(e) => handleContactCheckboxChange(contact, e.target.checked)} />
+                          </td>
+                          <th scope='row'>{index + 1}</th>
+                          <td>{contact.fullname}</td>
+                          <td>{contact.country.label}</td>
+                          <td>{contact.mobilenumber}</td>
+                          <td>{contact.email}</td>
+                          <td>
+                            <MDBDropdown>
+                              <MDBDropdownToggle>Action</MDBDropdownToggle>
+                              <MDBDropdownMenu>
+                                <MDBDropdownItem className="px-3 py-2" onClick={() => deleteRecord(contact.id)}>Delete</MDBDropdownItem>
+                                <MDBDropdownItem className="px-3 py-2" onClick={() => toggleOpen(contact)}>Edit</MDBDropdownItem>
+                              </MDBDropdownMenu>
+                            </MDBDropdown>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </MDBTableBody>
+                </MDBTable>
+              </div>
+            </MDBTabsPane>
+            <MDBTabsPane open={basicActive === 'tab2'}>
+              <div className="table-responsive">
+                <MDBTable>
+                  <MDBTableHead>
+                    <tr>
+                      <th scope='col'>#</th>
+                      <th scope='col'>Group Name</th>
+                      <th scope='col'>Contacts</th>
+                      <th scope='col'>Action</th>
+                    </tr>
+                  </MDBTableHead>
+                  <MDBTableBody>
+                    {Array.isArray(groupData) && groupData.length === 0 ? (
+                      <tr>
+                        <td colSpan="4" align="center">No data available</td>
+                      </tr>
+                    ) : (
+                      groupData.map((group, index) => (
+                        <tr key={index}>
+                          <th scope='row'>{index + 1}</th>
+                          <td>{group.groupName}</td>
+                          <td>{group.selectedContacts.length}</td>
+                          <td>
+                            <MDBDropdown>
+                              <MDBDropdownToggle>Action</MDBDropdownToggle>
+                              <MDBDropdownMenu>
+                                <MDBDropdownItem className="px-3 py-2" onClick={() => deleteGroupRecord(group.id)}>Delete</MDBDropdownItem>
+                                <MDBDropdownItem className="px-3 py-2" onClick={() => toggleGroupModal(group)}>Edit</MDBDropdownItem>
+                              </MDBDropdownMenu>
+                            </MDBDropdown>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </MDBTableBody>
+                </MDBTable>
+              </div>
+            </MDBTabsPane>
+          </MDBTabsContent>
+        </MDBCardBody>
+      </MDBCard>
     </div>
   );
 }
