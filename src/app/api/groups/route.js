@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import auth from "../../../../utils/supabase/auth";
-import ContactsList from "../../../../utils/supabase/backend/contacts/contactsList";
+import GroupsList from "../../../../utils/supabase/backend/groups/groupsList";
 
 export async function GET(request) {
     if (request.method === 'GET') {
         try {
-            const data = await ContactsList.get();
+            const data = await GroupsList.get();
             return NextResponse.json({ data }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ error: "Failed to get Instagram messages: " + error.message }, { status: 403 });
@@ -19,34 +19,24 @@ export async function POST(request) {
     if (request.method === 'POST') {
         try {
             const data = await request.json();
-            const { email, fullname , mobilenumber, country } = data;
+            const { groupName, selectedContacts } = data;
 
-            const existingMessage = await ContactsList.getByContactsList(mobilenumber);
+            const existingGroup = await GroupsList.getGroup(groupName);
 
             const userData = await auth.getSession();
-
             let result;
-            if (!existingMessage) {
-                result = await ContactsList.update({
+
+            if (!existingGroup) {
+                result = await GroupsList.update({
                     user_id: userData.session.user.id,
-                    fullname : fullname,
-                    country: country,
-                    mobilenumber: mobilenumber,
-                    email: email,
-                    status: 1,
-                    IsActive: 1,
-                    IsDeleted: 0
+                    groupName : groupName,
+                    selectedContacts: selectedContacts
                 });
             } else {
-                result = await ContactsList.create({
+                result = await GroupsList.create({
                     user_id: userData.session.user.id,
-                    fullname : fullname,
-                    country: country,
-                    mobilenumber: mobilenumber,
-                    email: email,
-                    status: 1,
-                    IsActive: 1,
-                    IsDeleted: 0
+                    groupName : groupName,
+                    selectedContacts: selectedContacts
                 });
             }
 
@@ -64,13 +54,31 @@ export async function PATCH(request) {
     if (request.method === 'PATCH') { // Assuming partial updates
         try {
             const data = await request.json();
-            const { email, fullname , mobilenumber, country } = data;
+            const { groupName, selectedContacts } = data;
 
-            const result = await ContactsList.update({
-                fullname : fullname,
-                country: country,
-                mobilenumber: mobilenumber,
-                email: email,
+            const result = await GroupsList.update({
+                groupName : groupName,
+                selectedContacts: selectedContacts
+            });
+            // Implement update logic if needed
+            return NextResponse.json({ success: true }, { status: 200 });
+        } catch (error) {
+            console.error("Error handling UPDATE request:", error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+    } else {
+        return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
+    }
+}
+
+export async function DELETE(request) {
+    if (request.method === 'DELETE') { // Assuming partial updates
+        try {
+            const data = await request.json();
+            const { id } = data;
+
+            const result = await GroupsList.delete({
+                id : id,
             });
             // Implement update logic if needed
             return NextResponse.json({ success: true }, { status: 200 });

@@ -1,12 +1,12 @@
-import auth from "../../../auth";
-import { createClient } from "../../../server";
+import auth from "../../auth";
+import { createClient } from "../../server";
 
-const contactsList = {
+const ContactsList = {
     create : async (data) => {
         try {
             const supabase = createClient();
 
-            const { error } = await supabase.from("contacts").insert(data);
+            const { error } = await supabase.from("Contacts").insert(data);
             
             if (error) {
                 return { message: error.message };
@@ -22,7 +22,7 @@ const contactsList = {
         
         const userData = await auth.getSession();
 
-        const { data , error } = await supabase.from("contacts")
+        const { data , error } = await supabase.from("Contacts")
         .select("*")
         .eq("user_id",userData.session.user.id);
 
@@ -32,13 +32,15 @@ const contactsList = {
 
         return data;
     },
-    getCredential: async () => {
-
+    getGroupContacts: async (groupId) => {
         const supabase = createClient();
         
         const userData = await auth.getSession();
 
-        const { data , error } = await supabase.from("contacts").select("*").eq("user_id",userData.session.user.id);
+        const { data , error } = await supabase.from("Contacts")
+        .select("*")
+        .eq("groupId",groupId)
+        .eq("user_id",userData.session.user.id);
 
         if (error) {
             return { message: error.message };
@@ -46,17 +48,33 @@ const contactsList = {
 
         return data;
     },
-    updateCredentialData: async (formData) => {
+    getByContactsList: async (mobilenumber) => {
+
+        const supabase = createClient();
+        
+        const userData = await auth.getSession();
+
+        const { data , error } = await supabase.from("Contacts").select("*").eq("mobilenumber",mobilenumber).eq("user_id",userData.session.user.id);
+
+        if (error) {
+            return { message: error.message };
+        }
+
+        return data;
+    },
+    update: async (updateData) => {
         try {
             const supabase = createClient();
             
             const userData = await auth.getSession();
             
-            const updateData = Object.fromEntries(formData);
-            const { access_token, phone, phone_id, business_id , app_id} = updateData;
+            const { email, fullname , mobilenumber, country } = updateData;
 
-            const { data , error } = await supabase.from("contacts").update({ 
-                access_token: access_token, 
+            const { data , error } = await supabase.from("Contacts").update({ 
+                email : email,
+                fullname : fullname,
+                mobilenumber: mobilenumber,
+                country: country
             }).eq("user_id",userData.session.user.id);
 
             if (error) {
@@ -70,4 +88,4 @@ const contactsList = {
     }
 };
 
-export default contactsList;
+export default ContactsList;

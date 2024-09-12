@@ -1,7 +1,8 @@
 import { Inter } from "next/font/google";
-import "./globals.css"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] });
 

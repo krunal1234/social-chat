@@ -80,9 +80,9 @@ const TopBar = ({ onSidebarToggle }) => {
           </svg>
         </button>
         {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 bg-cyan-400 text-white w-48 rounded-md shadow-lg">
-            <Link href="/app/profile" className="block px-4 py-2 hover:bg-cyan-400">Profile</Link>
-            <button onClick={handleLogout} className="block px-4 py-2 hover:bg-cyan-400">Logout</button>
+          <div className="absolute z-10 right-0 mt-2 bg-white w-48 rounded-md shadow-lg">
+            <Link href="/app/profile" className="block px-4 py-2 text-black hover:bg-cyan-400 hover:text-white">Profile</Link>
+            <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-black hover:bg-cyan-400 hover:text-white">Logout</button>
           </div> 
         )}
       </div>

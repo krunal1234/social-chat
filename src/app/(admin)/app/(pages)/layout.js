@@ -1,6 +1,4 @@
 "use client"
-import 'react-toastify/dist/ReactToastify.css';
-import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import Footer from "../components/Footer";

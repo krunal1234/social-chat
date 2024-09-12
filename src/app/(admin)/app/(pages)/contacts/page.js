@@ -1,4 +1,6 @@
 'use client'
+
+import axios from 'axios';
 import { Country }  from 'country-state-city';
 import { 
   MDBTable, 
@@ -25,6 +27,7 @@ import {
   MDBCardBody} from 'mdb-react-ui-kit';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
+import { toast } from 'react-toastify';
 
 const Contacts = () => {
 
@@ -74,10 +77,10 @@ const Contacts = () => {
 
   const toggleOpen = (contact) => {
     setBasicModal(!basicModal)
-    if (contact._id) {
+    if (contact && contact.id) {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        contactId: contact._id,
+        contactId: contact.id,
         fullname: contact.fullname,
         mobilenumber: contact.mobilenumber,
         email: contact.email,
@@ -95,10 +98,10 @@ const Contacts = () => {
     }
 };
   const toggleGroupModal = (group) => {
-    if (group._id) {
+    if (group && group.id) {
       setGroupFormData((prevGroupData) => ({
         ...prevGroupData,
-        groupId: group._id,
+        groupId: group.id,
         groupName: group.groupName,
         selectedContacts: group.selectedContacts
       }));
@@ -115,25 +118,23 @@ const Contacts = () => {
   };
   const handleGroupFormSubmit = async (e) => {
     e.preventDefault();
-
     // Perform form submission logic, e.g., API call
     try {
-      debugger;
       if(groupFormData.groupId){
-        const response = await axios.patch(process.env.REACT_APP_API_URL + '/api/group/' + formData.accountId + 
-        '/' + groupFormData.groupId , {
+        const response = await axios.patch(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/groups' , {
+          groupId: groupFormData.groupId,
           groupName: groupFormData.groupName,
           selectedContacts: groupFormData.selectedContacts
         });
-        if(response.data.response === "1"){
+        if(response.data.success){
           toast(response.data.message);
           fetchData();
         }else{
           toast(response.data.message)
         }
       }else{
-        const response = await axios.post(process.env.REACT_APP_API_URL + '/api/group/' + formData.accountId , groupFormData);
-        if(response.data.response === "1"){
+        const response = await axios.post(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/groups', groupFormData);
+        if(response.data.success){
           toast(response.data.message);
           fetchData();
         }else{
@@ -151,14 +152,14 @@ const Contacts = () => {
       // Add the contact to the selectedContacts state
       setGroupFormData(prevGroupData => ({
         ...prevGroupData,
-        selectedContacts: [...prevGroupData.selectedContacts,{ value: contact._id, label: contact.fullname }]
+        selectedContacts: [...prevGroupData.selectedContacts,{ value: contact.id, label: contact.fullname }]
       }));
     } else {
       // Remove the contact from the selectedContacts state
       setGroupFormData(prevGroupData => ({
         ...prevGroupData,
         selectedContacts: prevGroupData.selectedContacts.filter(selectedContact => 
-          selectedContact.value !== contact._id
+          selectedContact.value !== contact.id
           )
       }));
     }
@@ -170,22 +171,21 @@ const Contacts = () => {
     // Perform form submission logic, e.g., API call
     try {
       if(formData.contactId){
-        const response = await axios.patch(process.env.REACT_APP_API_URL + '/api/contact/'+ formData.contactId, {
+        const response = await axios.patch(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/contacts/', {
           fullname: formData.fullname,
           country: formData.country,
           mobilenumber: formData.mobilenumber,
           email: formData.email,
         });
-        if(response.data.response === "1"){
+        if(response.data.success){
           toast(response.data.message);
-          fetchData();
         }else{
           toast(response.data.message)
         }
+        fetchData();
       }else{
-        const response = await axios.post(process.env.REACT_APP_API_URL + '/api/contact', formData);
-        if(response.data.response === "1"){
-         toast(response.data.message);
+        const response = await axios.post(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/contacts', formData);
+        if(response.data.success){
          fetchData();
         }else{
           toast(response.data.message);
@@ -200,7 +200,9 @@ const Contacts = () => {
 
   const deleteRecord = async (contactId) => {
     try {
-      await axios.delete(process.env.REACT_APP_API_URL + `/api/contact/${contactId}`);
+      await axios.delete(process.env.NEXT_PUBLIC_REACT_APP_API_URL + `/contacts`, {
+        data : { "id" : contactId }
+      });
       toast('Contact deleted successfully');
       fetchData(); // Fetch updated data after deletion
     } catch (error) {
@@ -210,7 +212,9 @@ const Contacts = () => {
 
   const deleteGroupRecord = async (groupId) => {
     try {
-      await axios.delete(process.env.REACT_APP_API_URL + `/api/group/${formData.accountId}/${groupId}`);
+      await axios.delete(process.env.NEXT_PUBLIC_REACT_APP_API_URL + `/groups/`, {
+        data : { "id" : groupId }
+      });
       toast('Group deleted successfully');
       fetchData(); // Fetch updated data after deletion
     } catch (error) {
@@ -226,12 +230,12 @@ const Contacts = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(process.env.REACT_APP_API_URL + '/api/contact/by-accountId/' + formData.accountId);
-      if(response.data.response === "1"){
+      const response = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/contacts');
+      if(response.data.data.length > 0){
         setcontactData(response.data.data);
       }
-      const groupresponse = await axios.get(process.env.REACT_APP_API_URL + '/api/group/' + formData.accountId);
-      if(groupresponse.data.response === "1"){
+      const groupresponse = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/groups');
+      if(groupresponse.data.data.length > 0){
         setgroupData(groupresponse.data.data);
       }
     } catch (error) {
@@ -240,22 +244,23 @@ const Contacts = () => {
   };
   
   useEffect(() => {
-    const fetchData = async () => {
+    const loadData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL + '/api/contact/by-accountId/' + formData.accountId);
-        if(response.data.response === "1"){
+        const response = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/contacts');
+        if(response.data.data.length > 0){
           setcontactData(response.data.data);
         }
-        const groupresponse = await axios.get(process.env.REACT_APP_API_URL + '/api/group/' + formData.accountId);
-        if(groupresponse.data.response === "1"){
+        const groupresponse = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/groups');
+        if(groupresponse.data.data.length > 0){
           setgroupData(groupresponse.data.data);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
+    loadData();
 
-  }, [formData.accountId, setcontactData, setgroupData]);
+  }, [setcontactData, setgroupData]);
 
    return (
     <div className="container-fluid mt-3">
@@ -263,7 +268,7 @@ const Contacts = () => {
           <MDBBtn onClick={toggleOpen} className='ms-3'>Create Contact</MDBBtn>
           <MDBBtn onClick={toggleGroupModal} className='ms-3'>Create Group</MDBBtn>
         </div>
-        <MDBModal open={basicModal} setOpen={setBasicModal} tabIndex='-1' toggle="false">
+        <MDBModal open={basicModal} tabIndex='-1' toggle="false">
           <MDBModalDialog>
             <MDBModalContent>
               <MDBModalHeader>
@@ -302,7 +307,7 @@ const Contacts = () => {
             </MDBModalContent>
           </MDBModalDialog>
         </MDBModal>
-        <MDBModal open={groupModal} setOpen={setGroupModal} tabIndex='-1' toggle="false">
+        <MDBModal open={groupModal} tabIndex='-1' toggle="false">
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
@@ -314,7 +319,7 @@ const Contacts = () => {
                 <MDBInput className='mb-4' type='text' name='groupName' value={groupFormData.groupName} required label='Group Name' onChange={(e) => setGroupFormData({ ...groupFormData, groupName: e.target.value })} />
                 <Select
                   className='mb-4'
-                  options={contactData.map(contact => ({ value: contact._id, label: contact.fullname }))}
+                  options={contactData.map(contact => ({ value: contact.id, label: contact.fullname }))}
                   isSearchable
                   isMulti
                   placeholder="Select Contacts"
@@ -371,7 +376,7 @@ const Contacts = () => {
                         <MDBTableBody>
                           {Array.isArray(contactData) && contactData.length === 0 ? (
                               <tr>
-                                <td colSpan="6" align="center">No data available</td>
+                                <td colSpan="7" align="center">No data available</td>
                               </tr>
                             ) : (
                               contactData.map((contact, index) => (
@@ -388,7 +393,7 @@ const Contacts = () => {
                                     <MDBDropdown>
                                       <MDBDropdownToggle>Action</MDBDropdownToggle>
                                       <MDBDropdownMenu>
-                                        <MDBDropdownItem className="px-3 py-2" onClick={() => deleteRecord(contact._id)}>Delete</MDBDropdownItem>
+                                        <MDBDropdownItem className="px-3 py-2" onClick={() => deleteRecord(contact.id)}>Delete</MDBDropdownItem>
                                         <MDBDropdownItem className="px-3 py-2" onClick={() => toggleOpen(contact)}>Edit</MDBDropdownItem>
                                       </MDBDropdownMenu>
                                     </MDBDropdown>
@@ -429,7 +434,7 @@ const Contacts = () => {
                                     <MDBDropdown>
                                       <MDBDropdownToggle>Action</MDBDropdownToggle>
                                       <MDBDropdownMenu>
-                                        <MDBDropdownItem className="px-3 py-2" onClick={() => deleteGroupRecord(group._id)}>Delete</MDBDropdownItem>
+                                        <MDBDropdownItem className="px-3 py-2" onClick={() => deleteGroupRecord(group.id)}>Delete</MDBDropdownItem>
                                         <MDBDropdownItem className="px-3 py-2" onClick={() => toggleGroupModal(group)}>Edit</MDBDropdownItem>
                                       </MDBDropdownMenu>
                                     </MDBDropdown>

@@ -16,7 +16,9 @@
 .scrollable-container::-webkit-scrollbar {
   display: none; /* Hide scrollbar */
 }
-
+p{
+  bottom: 0;
+}
 /* Firefox */
 .scrollable-container {
   scrollbar-width: none; /* Hide scrollbar */
