@@ -47,7 +47,6 @@ const CreateTemplate = () => {
     }
 
     const [formData, setFormData] = useState({
-        accountId: Cookies.get("accountId"),
     });
 
     return (
