@@ -14,7 +14,7 @@ const Campaigns = () => {
         try {
             const response = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/campaigns');
             // Assuming the response.data is an array of campaign objects
-            if(response.data.response === "1"){
+            if(response.data.data.length > 0){
                 setcampaignData(response.data.data);
             }
         } catch (error) {
@@ -65,11 +65,11 @@ const Campaigns = () => {
                           campaignData.map((contact, index) => (
                             <tr key={index}>
                               <td>{contact.CampaignName}</td>
-                              <td>{formatDateTime(contact.createdDate)}</td>
-                              <td>{contact.status}</td>
-                              <td>{contact.Recipients.length}</td>
-                              <td>{contact.totalSent}</td>
-                              <td>{contact.totalFail}</td>
+                              <td>{formatDateTime(contact.created_at)}</td>
+                              <td>{contact.Status}</td>
+                              <td>{contact.RecipientsIds.length}</td>
+                              <td>{contact.TotalSent}</td>
+                              <td>{contact.TotalFail}</td>
                             </tr>
                           ))
                         )}
