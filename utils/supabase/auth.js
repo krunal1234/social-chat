@@ -22,6 +22,30 @@ const auth = {
     }
   },
 
+  getJWT : async () => {
+    const supabase = createClient();
+    const { data: { session }, error } = await supabase.auth.getSession();
+
+   
+    if (error) {
+      return { message: error.message };
+    }
+
+    const jwtToken = session.access_token;
+
+    return jwtToken;
+  },
+  getPublicURL : async (path) => {
+    const supabase = createClient();
+
+    const { data } = supabase
+      .storage
+      .from('campaignFile')
+      .getPublicUrl(path)
+
+    return data;
+
+  },
   getSession: async () => {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();

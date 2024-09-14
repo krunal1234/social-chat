@@ -122,11 +122,12 @@ export async function POST(request) {
                     });
                 }
 
+                var JWT = await auth.getJWT();
+
+
                 if (variableFileDynamicValue) {
                     const imageFileID = variableFileDynamicValue.fileId;
-                    const imageFilePath = variableFileDynamicValue.filePath;
-                    UploadedFile = `https://iztwmjuqnrnpmctznjvw.supabase.co/storage/v1/object/sign/${imageFilePath}`;
-
+                    UploadedFile = await auth.getPublicURL(variableFileDynamicValue.filePath);
                     if (templateType === "IMAGE") {
                     FileType = "IMAGE";
                     templateData.components.push({
@@ -135,7 +136,7 @@ export async function POST(request) {
                         {
                             "type": "image",
                             "image": {
-                            "link": UploadedFile
+                            "link": UploadedFile.publicUrl
                             }
                         }
                         ]
@@ -149,7 +150,7 @@ export async function POST(request) {
                         {
                             "type": "document",
                             "document": {
-                            "link": UploadedFile
+                            "link": UploadedFile.publicUrl
                             }
                         }
                         ]
@@ -163,7 +164,7 @@ export async function POST(request) {
                         {
                             "type": "video",
                             "video": {
-                            "link": UploadedFile
+                            "link": UploadedFile.publicUrl
                             }
                         }
                         ]
@@ -218,11 +219,13 @@ export async function POST(request) {
                 CampaignName : CampaignName,
                 CampaignOwnerName : CampaignOwnerName,
                 FromNumber : FromNumber,
-                status : 1,
+                FileType: templateType,
+                FilePath : UploadedFile.publicUrl,
+                Status : 1,
                 IsActive : 1,
                 IsDeleted : 1,
-                totalSent : TotalSent,
-                totalFail : TotalFail
+                TotalSent : TotalSent,
+                TotalFail : TotalFail
             });
 
             // Update Campaign with totals

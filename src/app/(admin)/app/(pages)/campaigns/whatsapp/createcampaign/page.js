@@ -13,10 +13,11 @@ import TemplateCard from '../../../templates/card/page';
 import Image from 'next/image';
 import { createClient } from '../../../../../../../../utils/supabase/client';
 import { toast } from 'react-toastify';
-import { Router } from 'next/router';
+import { useRouter } from "next/navigation";
 
 const CreateCampaign = () => {
 	let counterCases = 0;
+    const router = useRouter();
 	const [templateData, setTemplateData] = useState([]);
 	const [selectedRadio, setSelectedRadio] = useState('flexRadioDefault2'); 
 	const [currentStep, setCurrentStep] = useState(1);
@@ -86,7 +87,7 @@ const CreateCampaign = () => {
 		const avatarFile = event.target.files[0];
     
 		if (!avatarFile) {
-			console.error('No file selected');
+			toast.warn('No file selected');
 			return;
 		}
 		// Example user ID (you would typically get this from your authentication system)
@@ -119,14 +120,14 @@ const CreateCampaign = () => {
 					...prevFormData,
 					variableFileDynamicValue: {
 						fileId: data.id,
-						filePath: data.fullPath
+						filePath: data.path
 					},
 				};
 			});
 			
-			console.log('Upload successful:', data);
+			toast('Upload successful:', data);
 		} catch (error) {
-			console.error('Error uploading file:', error);
+			toast.warn('Error uploading file:', error);
 		}
 	};
 	const handleInputChange = (e, number) => {
@@ -298,17 +299,15 @@ const CreateCampaign = () => {
 	);
 	const handleSubmit = async () => {
 		// Handle form submission logic here
-		console.log('Form submitted:', formData);
 		const response = await axios.post(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/fb/sendCampaignMessage/', formData);
 		if(response.data.data && response.data.response == 1){
 			toast(response.data.message);
 			setTimeout(function(){
-				Router.push(`/app/campaigns/whatsapp`, "success");
+				router.push(`/app/campaigns/whatsapp`, "success");
 			},2000);
 		}else{
 			toast.warn(response.data.message);
 		}
-		console.log('Form submitted successfully:', response.data);
 	};
 	const setSelectedGroups = (e) => {
 		let selectedGroups = e;
@@ -390,12 +389,11 @@ const CreateCampaign = () => {
 			const groupresponse = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/groups');
 			if(groupresponse.data.data.length > 0){
 				setgroupData(groupresponse.data.data);
-				console.log(JSON.stringify(groupresponse.data.data));
 			}	
 	        setapicredential({ business_id : response.data.data[0].business_id, access_token: response.data.data[0].access_token, phonenumberid: response.data.data[0].phone_id});
 	        setLoading(false);
 		    } catch (error) {
-		      console.error('Error fetching data:', error);
+		      toast.warn('Error fetching data:', error);
 		    }
 	  };
 	  fetchData();
