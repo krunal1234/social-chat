@@ -17,7 +17,7 @@ debugger;
         const templates = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/fb/getTemplate/',
         {
           params : {
-            fbappid : response.data.data[0].business_id,
+            business_id : response.data.data[0].business_id,
             accessToken : response.data.data[0].access_token
           }
         });

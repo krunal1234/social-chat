@@ -32,6 +32,22 @@ const ContactsList = {
 
         return data;
     },
+    findById: async (id) => {
+        const supabase = createClient();
+        
+        const userData = await auth.getSession();
+
+        const { data , error } = await supabase.from("Contacts")
+        .select("*")
+        .eq("id",id)
+        .eq("user_id",userData.session.id);
+
+        if (error) {
+            return { message: error.message };
+        }
+
+        return data;
+    },
     getGroupContacts: async (groupId) => {
         const supabase = createClient();
         

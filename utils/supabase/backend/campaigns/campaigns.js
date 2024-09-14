@@ -32,6 +32,22 @@ const WhatsappCampaignsList = {
 
         return data;
     },
+    findOne: async (CampaignName) => {
+        const supabase = createClient();
+        
+        const userData = await auth.getSession();
+
+        const { data , error } = await supabase.from("WhatsappCampaigns")
+        .select("*")
+        .eq("CampaignName",CampaignName)
+        .eq("user_id",userData.session.id);
+
+        if (error) {
+            return { message: error.message };
+        }
+
+        return data;
+    }, 
     getGroupCampaign: async (groupId) => {
         const supabase = createClient();
         

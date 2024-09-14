@@ -33,7 +33,6 @@ const Sidebar = ({ isOpen, activeChat, activeTab, toggleSidebar, onSelectChat })
       }
     };
     getMessageList();
-
     const supabase = supabaseRef.current;
 
     const channel = supabase
@@ -96,7 +95,7 @@ const Sidebar = ({ isOpen, activeChat, activeTab, toggleSidebar, onSelectChat })
                     onClick={() => onSelectChat(mobileNumber)}
                   >
                     <span className="font-semibold">{fullName}</span>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 text-ellipsis whitespace-nowrap ov">
                       {lastMessage}
                     </p>
                   </li>

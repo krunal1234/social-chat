@@ -20,18 +20,24 @@ export async function GET(request) {
         const data = await new Promise((resolve, reject) => {
             FB.api(phoneid, function (response) {
                 if (!response || response.error) {
-                    reject(response.error || 'error occurred');
+                    resolve(response.error || 'error occurred');
                 } else {
                     resolve(response);
                 }
             });
         });
-
-        return NextResponse.json({
-            response: "1",
-            message: "Facebook Profile",
-            data: data
-        });
+        if(data.message){
+            return NextResponse.json({
+                response: "0",
+                data: data.message
+            });
+        }else{
+            return NextResponse.json({
+                response: "1",
+                message: "Facebook Profile",
+                data: data
+            });
+        }
 
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });

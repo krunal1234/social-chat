@@ -55,7 +55,6 @@ const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer, setLoadi
   };
 
   useEffect(() => {
-    setLoading(true);
     const fetchActiveChannels = async () => {
       try {
         const response = await fetch('/api/user');
@@ -67,7 +66,7 @@ const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer, setLoadi
           ...card,
           isActive: activeChannelIds.has(card.id),
         }));
-        setLoading(true);
+        setLoading(false);
 
         setActiveChannels(updatedCardData.filter(card => card.isActive));
       } catch (error) {
@@ -75,7 +74,6 @@ const TopBar = ({ activeTab, setActiveTab, toggleSidebar, toggleDrawer, setLoadi
       }
     };
 
-    fetchActiveChannels();
   }, []);
 
   return (

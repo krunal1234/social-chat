@@ -7,12 +7,13 @@ import {
   MDBCardBody,
 } from 'mdb-react-ui-kit';
 import { ArrowLeft2 ,VideoCircle,Call } from 'iconsax-react';
-import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import Select from 'react-select';
 import TemplateCard from '../../../templates/card/page';
 import Image from 'next/image';
 import { createClient } from '../../../../../../../../utils/supabase/client';
+import { toast } from 'react-toastify';
+import { Router } from 'next/router';
 
 const CreateCampaign = () => {
 	let counterCases = 0;
@@ -28,6 +29,9 @@ const CreateCampaign = () => {
 			phonenumberid: "",
 	});
   	const [formData, setFormData] = useState({
+		accessToken: "",
+		fbappid: "",
+		phonenumberid: "",
 		CampaignName: "",
 		CampaignOwnerName: "",
 		FromNumber: "",
@@ -40,7 +44,7 @@ const CreateCampaign = () => {
 		variableBodyDynamicValue: [],
 		variableFileDynamicValue: [{
 			fileId: "",
-			fileName: ""
+			filePath: ""
 		}],
 		variableButtonDynamicValue: {
 			buttonUrlValue : "",
@@ -85,7 +89,6 @@ const CreateCampaign = () => {
 			console.error('No file selected');
 			return;
 		}
-		debugger;
 		// Example user ID (you would typically get this from your authentication system)
 		const user = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/user');
 		const userId = user.data.data[0].id;
@@ -110,6 +113,16 @@ const CreateCampaign = () => {
 			if (error) {
 				throw error;
 			}
+
+			setFormData((prevFormData) => {
+				return {
+					...prevFormData,
+					variableFileDynamicValue: {
+						fileId: data.id,
+						filePath: data.fullPath
+					},
+				};
+			});
 			
 			console.log('Upload successful:', data);
 		} catch (error) {
@@ -286,14 +299,14 @@ const CreateCampaign = () => {
 	const handleSubmit = async () => {
 		// Handle form submission logic here
 		console.log('Form submitted:', formData);
-		const response = await axios.post(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/fb/sendCampaignMessage/' +  apicredential.business_id + "/" + apicredential.access_token + "/" + apicredential.phonenumberid, formData);
-		if(response.data.data.length > 0){
+		const response = await axios.post(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/fb/sendCampaignMessage/', formData);
+		if(response.data.data && response.data.response == 1){
 			toast(response.data.message);
-		setTimeout(function(){
-					navigate('/campaigns');
-				},2000);
+			setTimeout(function(){
+				Router.push(`/app/campaigns/whatsapp`, "success");
+			},2000);
 		}else{
-			toast(response.data.message);
+			toast.warn(response.data.message);
 		}
 		console.log('Form submitted successfully:', response.data);
 	};
@@ -307,13 +320,13 @@ const CreateCampaign = () => {
 			}
 		});
 		if(selectedGroups && selectedGroups.length > 0){
-			const selectedGroupData = groupData.filter(group => group._id === selectedGroups[0]._id);
+			const selectedGroupData = groupData.filter(group => group.id === selectedGroups[0].id);
 			const selectedContactIds = selectedGroupData.flatMap(
 				group => group.selectedContacts.map(contact => contact.value)
 			);
 		
 			// Filter recipientsData to find contacts with matching IDs
-			const uniqueContacts = ContactData.filter(contact => selectedContactIds.includes(contact._id));
+			const uniqueContacts = ContactData.filter(contact => selectedContactIds.includes(contact.id));
 		
 			// Set Recipients in formData with unique contacts
 			setFormData(prevFormData => ({
@@ -350,16 +363,14 @@ const CreateCampaign = () => {
 		      const response = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/socialapi/whatsapp');
 		      let templates;
 			  let fbProfile;
-			  debugger;
 		      if (response.data.data.length > 0) {
 		        templates = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/fb/getTemplate/',
 				{
 					params : {
-						fbappid : response.data.data[0].business_id,
+						business_id : response.data.data[0].business_id,
 						accessToken : response.data.data[0].access_token
 					}
 				});
-				debugger;
 
 				fbProfile = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/fb/getProfile/',
 					{
@@ -371,7 +382,7 @@ const CreateCampaign = () => {
 		      }
 		      getContact();
 				if (response.data.data.length > 0) {
-		      	setFormData({ FromNumber : response.data.data[0].phone, CampaignOwnerName: fbProfile.data.data.verified_name });
+		      	setFormData({ accessToken: response.data.data[0].access_token, business_id: response.data.data[0].business_id, phonenumberid: response.data.data[0].phone_id , FromNumber : response.data.data[0].phone, CampaignOwnerName: fbProfile.data.data.verified_name });
 		      }
 			if(templates.data.data && templates.data.data.message_templates && templates.data.data.message_templates.data.length > 0){
 	        	setTemplateData(templates.data.data.message_templates.data);
@@ -401,7 +412,6 @@ const CreateCampaign = () => {
 				<main className="p-6 h-screen flex-wrap flex items-center justify-center"><Image alt='loading' src='/loading.gif' width={40} height={40}/></main>
 			) : (
 			<div>
-				<ToastContainer />
 				{currentStep === 1 && (
 					<div>
 						<div className="container-fluid mt-3">
@@ -424,7 +434,7 @@ const CreateCampaign = () => {
 										{selectedRadio === 'flexRadioDefault3' && (
 											<Select
 												className="my-2"
-												options={groupData.map((group) => ({ _id: group._id, label: group.groupName }))}
+												options={groupData.map((group) => ({ id: group.id, label: group.groupName }))}
 												isSearchable
 												isMulti
 												placeholder="Select Contacts"

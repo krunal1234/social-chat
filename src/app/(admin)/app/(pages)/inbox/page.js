@@ -26,7 +26,7 @@ const Page = () => {
   const Drawer = lazy(() => import(`./${activeTab}/components/Drawer`));
 
   if (loading) {
-    return <main className="p-6 h-screen flex-wrap flex items-center justify-center"><Image src='/loading.gif' width={40} height={40}/></main>;
+    return <main className="p-6 h-screen flex-wrap flex items-center justify-center"><Image src='/loading.gif' width={40} height={40} alt="Loading"/></main>;
   }
 
   return (
