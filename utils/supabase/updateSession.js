@@ -22,7 +22,7 @@ export async function updateSession(request) {
   });
 
   try {
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const { data: { session }, error } = await supabase.auth.getSession();
 
     if (error) {
       console.error('Error fetching session:', error);
@@ -31,7 +31,11 @@ export async function updateSession(request) {
 
     const url = request.nextUrl.clone();
 
-    if (user) {
+    if (session) {
+      // Assuming you want to set JWT manually in cookies
+      const jwtToken = session.access_token;
+      request.cookies.set('jwt', jwtToken, { httpOnly: true, secure: true, sameSite: 'Strict' });
+
       if (url.pathname.startsWith('/login') || url.pathname.startsWith('/register')) {
         const redirectUrl = new URL('/app/dashboard', request.url);
         return NextResponse.redirect(redirectUrl);
@@ -39,11 +43,11 @@ export async function updateSession(request) {
     } else {
       if (url.pathname.startsWith('/login') || url.pathname.startsWith('/register')) {
         return NextResponse.next();
-      }else{
-        if (url.pathname.startsWith('/app')){
+      } else {
+        if (url.pathname.startsWith('/app')) {
           const redirectUrl = new URL('/login', request.url);
           return NextResponse.redirect(redirectUrl);
-        }else{
+        } else {
           return NextResponse.next();
         }
       }

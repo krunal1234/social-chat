@@ -24,13 +24,13 @@ const auth = {
 
   getSession: async () => {
     const supabase = createClient();
-    const { data: sessionData, error } = await supabase.auth.getSession();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (error) {
+    if (!user) {
       return { message: error.message };
     }
 
-    return { session: sessionData.session };
+    return { session: user };
   },
 
   createUserData: async (data) => {
@@ -46,13 +46,13 @@ const auth = {
 
   getUserData: async () => {
     const supabase = createClient();
-    const { session } = await auth.getSession();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!session?.user) {
+    if (!user) {
       return { message: "No user session found" };
     }
 
-    const { data, error } = await supabase.from("UserInfo").select("*").eq("user_id", session.user.id);
+    const { data, error } = await supabase.from("UserInfo").select("*").eq("user_id", user.id);
 
     if (error) {
       return { message: error.message };
@@ -63,9 +63,9 @@ const auth = {
 
   updateUserData: async (formData) => {
     const supabase = createClient();
-    const { session } = await auth.getSession();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!session?.user) {
+    if (!user) {
       return { message: "No user session found" };
     }
 
@@ -77,7 +77,7 @@ const auth = {
       phone,
       address,
       channels
-    }).eq("user_id", session.user.id);
+    }).eq("user_id", user.id);
 
     if (error) {
       return { message: error.message };

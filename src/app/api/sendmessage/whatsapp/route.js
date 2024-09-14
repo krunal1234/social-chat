@@ -109,7 +109,7 @@ export async function POST(request) {
 
           if (responseData?.messages && responseData.messages.length > 0) {
               const result = await WhatsappMessageList.create({
-                  user_id: userData.session.user.id,
+                  user_id: userData.session.id,
                   wamessageid: responseData.messages[0].id,
                   generatedmessages,
                   Fullname,

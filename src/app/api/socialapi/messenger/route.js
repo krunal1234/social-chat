@@ -32,7 +32,7 @@ export async function POST(request) {
                 const { access_token } = data;
                 const userData = await auth.getSession();
                 result = await MessengerCredential.create({
-                    user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
+                    user_id: userData.session.id, // Assuming `user_id` is the primary key or identifier in your table
                     access_token
                 });
             }

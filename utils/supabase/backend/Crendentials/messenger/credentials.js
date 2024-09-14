@@ -24,7 +24,7 @@ const MessengerCredential = {
 
         const { data , error } = await supabase.from("MessengerCredential")
         .select("*")
-        .eq("user_id",userData.session.user.id);
+        .eq("user_id",userData.session.id);
 
         if (error) {
             return { message: error.message };
@@ -38,7 +38,7 @@ const MessengerCredential = {
         
         const userData = await auth.getSession();
 
-        const { data , error } = await supabase.from("MessengerCredential").select("*").eq("user_id",userData.session.user.id);
+        const { data , error } = await supabase.from("MessengerCredential").select("*").eq("user_id",userData.session.id);
 
         if (error) {
             return { message: error.message };
@@ -61,7 +61,7 @@ const MessengerCredential = {
                 phone: phone, 
                 phone_id: phone_id, 
                 business_id: business_id,
-            }).eq("user_id",userData.session.user.id);
+            }).eq("user_id",userData.session.id);
 
             if (error) {
                 return { message: error.message };

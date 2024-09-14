@@ -28,9 +28,9 @@ export async function PUT(request) {
             }else{
                 const data = Object.fromEntries(formData);
                 const { name, phone, email, address, password, channels } = data;
-                const userData = await auth.getSession();
+                const userData = await auth.getUserData();
                 const { error: createUserError } = await auth.createUserData({
-                    user_id: userData.session.user.id, // Assuming `user_id` is the primary key or identifier in your table
+                    user_id: userData.session.id, // Assuming `user_id` is the primary key or identifier in your table
                     address,
                     phone,
                     name,

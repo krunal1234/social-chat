@@ -28,13 +28,13 @@ export async function POST(request) {
 
             if (!existingGroup) {
                 result = await GroupsList.update({
-                    user_id: userData.session.user.id,
+                    user_id: userData.session.id,
                     groupName : groupName,
                     selectedContacts: selectedContacts
                 });
             } else {
                 result = await GroupsList.create({
-                    user_id: userData.session.user.id,
+                    user_id: userData.session.id,
                     groupName : groupName,
                     selectedContacts: selectedContacts
                 });

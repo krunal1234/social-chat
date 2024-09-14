@@ -24,7 +24,7 @@ const ContactsList = {
 
         const { data , error } = await supabase.from("Contacts")
         .select("*")
-        .eq("user_id",userData.session.user.id);
+        .eq("user_id",userData.session.id);
 
         if (error) {
             return { message: error.message };
@@ -40,7 +40,7 @@ const ContactsList = {
         const { data , error } = await supabase.from("Contacts")
         .select("*")
         .eq("groupId",groupId)
-        .eq("user_id",userData.session.user.id);
+        .eq("user_id",userData.session.id);
 
         if (error) {
             return { message: error.message };
@@ -54,7 +54,7 @@ const ContactsList = {
         
         const userData = await auth.getSession();
 
-        const { data , error } = await supabase.from("Contacts").select("*").eq("mobilenumber",mobilenumber).eq("user_id",userData.session.user.id);
+        const { data , error } = await supabase.from("Contacts").select("*").eq("mobilenumber",mobilenumber).eq("user_id",userData.session.id);
 
         if (error) {
             return { message: error.message };
@@ -75,7 +75,7 @@ const ContactsList = {
                 fullname : fullname,
                 mobilenumber: mobilenumber,
                 country: country
-            }).eq("user_id",userData.session.user.id);
+            }).eq("user_id",userData.session.id);
 
             if (error) {
                 return { message: error.message };

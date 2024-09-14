@@ -12,7 +12,7 @@ const Campaigns = () => {
     const [campaignData, setcampaignData] = useState([]);
     const fetchData = async () => {
         try {
-            const response = await axios.get(process.env.NEXT_PUBLIC_NEXT_PUBLIC_REACT_APP_API_URL + '/campaigns');
+            const response = await axios.get(process.env.NEXT_PUBLIC_REACT_APP_API_URL + '/campaigns');
             // Assuming the response.data is an array of campaign objects
             if(response.data.response === "1"){
                 setcampaignData(response.data.data);

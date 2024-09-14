@@ -25,7 +25,7 @@ const whatsappCredentials = {
         const { data , error } = await supabase.from("WhatsappCredentials")
         .select("*")
         .eq("platform_id","1")
-        .eq("user_id",userData.session.user.id);
+        .eq("user_id",userData.session.id);
 
         if (error) {
             return { message: error.message };
@@ -39,7 +39,7 @@ const whatsappCredentials = {
         
         const userData = await auth.getSession();
 
-        const { data , error } = await supabase.from("WhatsappCredentials").select("*").eq("user_id",userData.session.user.id);
+        const { data , error } = await supabase.from("WhatsappCredentials").select("*").eq("user_id",userData.session.id);
 
         if (error) {
             return { message: error.message };
@@ -62,7 +62,7 @@ const whatsappCredentials = {
                 phone: phone, 
                 phone_id: phone_id, 
                 business_id: business_id,
-            }).eq("user_id",userData.session.user.id);
+            }).eq("user_id",userData.session.id);
 
             if (error) {
                 return { message: error.message };

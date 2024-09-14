@@ -28,7 +28,7 @@ export async function POST(request) {
             let result;
             if (!existingMessage) {
                 result = await WhatsappCampaignsList.update({
-                    user_id: userData.session.user.id,
+                    user_id: userData.session.id,
                     fullname : fullname,
                     country: country,
                     mobilenumber: mobilenumber,
@@ -39,7 +39,7 @@ export async function POST(request) {
                 });
             } else {
                 result = await WhatsappCampaignsList.create({
-                    user_id: userData.session.user.id,
+                    user_id: userData.session.id,
                     fullname : fullname,
                     country: country,
                     mobilenumber: mobilenumber,

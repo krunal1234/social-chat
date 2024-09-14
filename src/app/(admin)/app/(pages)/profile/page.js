@@ -86,7 +86,7 @@ const Profile = () => {
     <main className="p-6 h-full flex-wrap">
       <h2 className="text-2xl font-bold">Profile</h2>
       <form className="mt-4 mx-auto" onSubmit={handleSubmit}>
-        <div className="mb-5">
+        <div className="mb-3">
           <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
           <input
             type="text"
@@ -97,7 +97,7 @@ const Profile = () => {
             required
           />
         </div>
-        <div className="mb-5">
+        <div className="mb-3">
           <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone</label>
           <input
             type="text"
@@ -108,7 +108,7 @@ const Profile = () => {
             required
           />
         </div>
-        <div className="mb-5">
+        <div className="mb-3">
           <label htmlFor="channels" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Channels</label>
           <Select
             isMulti
@@ -118,7 +118,7 @@ const Profile = () => {
             placeholder="Select channels..."
           />
         </div>
-        <div className="mb-5">
+        <div className="mb-3">
           <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
           <textarea
             name="address"

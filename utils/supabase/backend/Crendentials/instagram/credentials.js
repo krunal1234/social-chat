@@ -24,7 +24,7 @@ const InstagramCredential = {
 
         const { data , error } = await supabase.from("InstagramCredential")
         .select("*")
-        .eq("user_id",userData.session.user.id);
+        .eq("user_id",userData.session.id);
 
         if (error) {
             return { message: error.message };
@@ -38,7 +38,7 @@ const InstagramCredential = {
         
         const userData = await auth.getSession();
 
-        const { data , error } = await supabase.from("InstagramCredential").select("*").eq("user_id",userData.session.user.id);
+        const { data , error } = await supabase.from("InstagramCredential").select("*").eq("user_id",userData.session.id);
 
         if (error) {
             return { message: error.message };
@@ -57,7 +57,7 @@ const InstagramCredential = {
 
             const { data , error } = await supabase.from("InstagramCredential").update({ 
                 access_token: access_token, 
-            }).eq("user_id",userData.session.user.id);
+            }).eq("user_id",userData.session.id);
 
             if (error) {
                 return { message: error.message };

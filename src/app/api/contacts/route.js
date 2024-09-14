@@ -8,7 +8,7 @@ export async function GET(request) {
             const data = await ContactsList.get();
             return NextResponse.json({ data }, { status: 200 });
         } catch (error) {
-            return NextResponse.json({ error: "Failed to get Instagram messages: " + error.message }, { status: 403 });
+            return NextResponse.json({ error: "Failed to get Contacts: " + error.message }, { status: 403 });
         }
     } else {
         return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
@@ -28,7 +28,7 @@ export async function POST(request) {
             let result;
             if (!existingMessage) {
                 result = await ContactsList.update({
-                    user_id: userData.session.user.id,
+                    user_id: userData.session.id,
                     fullname : fullname,
                     country: country,
                     mobilenumber: mobilenumber,
@@ -39,7 +39,7 @@ export async function POST(request) {
                 });
             } else {
                 result = await ContactsList.create({
-                    user_id: userData.session.user.id,
+                    user_id: userData.session.id,
                     fullname : fullname,
                     country: country,
                     mobilenumber: mobilenumber,
