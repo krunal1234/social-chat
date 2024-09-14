@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { MDBBtn, MDBCard, MDBCardBody, MDBInput, MDBTextArea } from 'mdb-react-ui-kit';
-import Cookies from 'js-cookie';
 import Select from 'react-select';
 
 
